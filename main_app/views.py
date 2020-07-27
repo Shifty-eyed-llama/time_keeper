@@ -12,8 +12,12 @@ def index(request):
         currentUser = User.objects.get(id=request.session['userid'])
         context = {
             'user': currentUser,
+            'all_projects' : Project.objects.all(),
         }
     return render(request, 'homepage.html', context)
+
+def new(request):
+    return render(request, 'create.html')
 
 def create(request):
     user = User.object.get(id = request.session['user_id'])
@@ -22,4 +26,9 @@ def create(request):
     end = request.POST['end']
     working = request.POST['working']
     notes = request.POST['message']
-    Project.objects.create()
+    new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    if notes:
+        new_proj.message.add(notes)
+    if working:
+        new_proj.working.add(working)
+    return redirect('/')
