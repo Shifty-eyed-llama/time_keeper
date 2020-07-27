@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Management</title>
+    <style>
+        div.header{
+            width: 20%; 
+            height: 100%;
+            border-right: 1px solid black;
+            position: fixed;
+        }
+        div.wrapper{
+            width: 70%;
+            height: 1000px;
+            margin-left: 25%;
+            display: flex;
+        }
+        table, tr, th, td{
+            border-collapse: collapse;
+            border: 1px solid black;
+            padding: 5px 10px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="/end_session">Logout</a>
+        <h1>Welcome <a href="/dashboard/profile">{{user.firstName}} {{user.lastName}}</a></h1>
+    </div>
+    <div class="wrapper">
+        <div class="projects">
+            <table>
+                <tr>
+                    <th>Project Title</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Created By</th>
+                </tr>
+                {% for project in all_projects %}
+                <tr>
+                    <td>{{project.title}}</td>
+                    <td>{{project.state_date}}</td>
+                    <td>{{project.end_date}}</td>
+                    <td>{{project.create_by}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

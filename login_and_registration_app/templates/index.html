@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        div.forms{
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        div.form{
+            width: 350px;
+        }
+        div.form h1{
+            text-align: center;
+        }
+        div.col{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            box-sizing: content-box;
+            margin: 20px 0px;
+        }
+        input{
+            width: 60%;
+            box-sizing: border-box;
+        }
+        .email_error{
+            text-align: center;
+            font-weight: bolder;
+        }
+        div.error_messages{
+            width: auto;
+            height: auto;
+            color: red;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="forms">
+            <div class="form">
+                <h1>Registration</h1>
+                <form action="/process_registration" method="post">
+                    {% csrf_token %}
+                    <div class="col">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" name="firstName" required>
+                    </div>
+                    <div class="col">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" name="lastName" required>
+                    </div>
+                    <div class="col special-col">
+                        <label for="email">Email:</label>
+                        <input id="id_email" type="text" name="email" required>
+                    </div>
+                    <div class="col">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="col">
+                        <label for="confirm_password">Confirm Password:</label>
+                        <input type="password" name="confirm_password" required>
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+            <div class="form">
+                <h1>Login</h1>
+                <form action="/process_login" method="post">
+                    {% csrf_token %}
+                    <div class="col">
+                        <label for="email">Email:</label>
+                        <input type="text" name="email">
+                    </div>
+                    <div class="col">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password">
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+        <div class="error_messages">
+            {% if messages %}
+            <ul class="messages">    
+                {% for message in messages %}    
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+<script>
+    $("#id_email").focusout(function(){ // can be .keyup to check with each keystroke
+    var email=$(this).val();
+    if (email!="") {
+        $.ajax({
+        url:'{% url 'check_email_exists' %}',
+        type:'POST',
+        data:{email:email}
+        })
+        .done(function(response){
+        console.log(response);
+        if (response == "False") {
+            $(".email_error").remove();
+            $("<p class='email_error' style='color: green;'>Email Available</p>").insertBefore("div.special-col");
+        }
+        else {
+            $(".email_error").remove();
+            $("<p class='email_error' style='color: red;'>Email Not Available</p>").insertBefore("div.special-col");
+        }
+        })
+        .fail(function(){
+        console.log("failed");
+        });
+    }   
+    else {
+        $(".email_error").remove();
+    }
+});
+</script>
+</body>
+</html>
