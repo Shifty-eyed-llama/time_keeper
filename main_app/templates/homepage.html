@@ -38,13 +38,15 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Created By</th>
+                    <th>Actions</th>
                 </tr>
                 {% for project in all_projects %}
                 <tr>
                     <td>{{project.title}}</td>
-                    <td>{{project.state_date}}</td>
+                    <td>{{project.start_date}}</td>
                     <td>{{project.end_date}}</td>
-                    <td>{{project.create_by}}</td>
+                    <td>{{project.created_by.firstName}}</td>
+                    <td><a href="/dashboard/delete/{{ project.id }}">Delete</a></td>
                 </tr>
                 {% endfor %}
             </table>

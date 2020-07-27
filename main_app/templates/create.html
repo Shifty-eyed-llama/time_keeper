@@ -12,7 +12,7 @@
         <p><a href="/end_session">Log Out</a></p>
     </div>
     <div id="new_project">
-        <form action="/create" method="post">
+        <form action="/dashboard/create" method="post">
             {% csrf_token %}
         <p>
             Project Name:
@@ -29,8 +29,8 @@
         <p>
             Would you like to assign anyone?
             <select name="working" id="">
-                {% for user in users.all %}
-                <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+                {% for user in users %}
+                <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
                 {% endfor %}
             </select>
         </p>
@@ -38,6 +38,7 @@
             Would you like to add a message?
             <textarea name="message" id="" cols="60" rows="3"></textarea>
         </p>
+        <button type="submit">Create Project</button>
     </form>
     </div>
     

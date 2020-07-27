@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.index),
     path('new', views.new),
     path('create', views.create),
+    path('delete/<int:proj_id>', views.delete),
 ]
