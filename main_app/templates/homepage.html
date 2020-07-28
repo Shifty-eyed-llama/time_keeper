@@ -26,6 +26,7 @@
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Created By</th>
+                        <th>Working</th>
                         <th>Actions</th>
                 </tr>
                 {% for project in all_projects %}
@@ -35,6 +36,7 @@
                     <td>{{project.start_date}}</td>
                     <td>{{project.end_date}}</td>
                     <td>{{project.created_by.firstName}}</td>
+                    <td>{{project.working.firstName}}</td>
                     <td><a href="/dashboard/delete/{{ project.id }}">Delete</a>
                     </td>
                 </tr>

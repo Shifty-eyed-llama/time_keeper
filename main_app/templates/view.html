@@ -14,8 +14,8 @@
     <div id="project">
         <h2>{{ project.title }}</h2>
         <h4>Created by: {{ project.created_by.firstName}}</h4>
-        <h5>Start Date: {{ project.start_date }}</h5>
-        <h5>Due By: {{ project.end_date }}</h5>
+        <h5>Start Date: {{ project.start_date | safe }}</h5>
+        <h5>Due By: {{ project.end_date | safe }}</h5>
         <p>Currently being worked on by:
             {% if project.working > 1 %}
             <ul>
@@ -37,25 +37,24 @@
     </p>
     <p>
         Start Date:
-        <input type="date" name="start" id="" value="{{ project.start_date }}">
+        <input type="date" name="start" id="" value="{{ project.start_date | safe}}">
     </p>
     <p>
         Deadline:
-        <input type="date" name="end" id="" value="{{ project.end_date }}">
+        <input type="date" name="end" id="" value="{{ project.end_date | safe }}">
     </p>
     <p>
         Would you like to assign anyone?
-        <select name="working" id="">
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
+            {% for user in all_user %}
+            <label for="{{user.id}}">{{ user.firstName }} {{ user.lastName }}</label>
+            <input type="checkbox" name="working" id="" value="{{ user.id }}">
             {% endfor %}
-        </select>
     </p>
     <p>
         Would you like to add a message?
         <textarea name="message" id="" cols="60" rows="3" placeholder='{{ project.messages }}'></textarea>
     </p>
-    <button type="submit">Create Project</button>
+    <button type="submit">Update Project</button>
     </form>
     {% endif %}
     {% if messages in project %}

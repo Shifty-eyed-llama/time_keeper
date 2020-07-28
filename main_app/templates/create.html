@@ -35,14 +35,7 @@
                     <label for="notes">Project notes</label>
                     <textarea name="message" id="notes" cols="60" rows="3"></textarea>
                 </div>
-                <div class="inputs">
-                    <label for="addUser">Assign someone to your project</label>
-                    <select name="working" id="addUser">
-                        {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+
                 <button type="submit">Create Project</button>
             </form>
         </div>
