@@ -40,8 +40,7 @@ input, select{
 }
 button{
     margin-top: 50px;
-    color: white;
-    background-color: green;
+    background-color: yellow;
     font-size: 24px;
     cursor: pointer;
 }
