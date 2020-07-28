@@ -30,7 +30,7 @@
                 </tr>
                 {% for project in all_projects %}
                 <tr>
-                    <td><a href="">{{project.title}}</a></td>
+                    <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
                     <td>{{project.start_date}}</td>
                     <td>{{project.end_date}}</td>
                     <td>{{project.created_by.firstName}}</td>

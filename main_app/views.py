@@ -5,7 +5,6 @@ from django.contrib import messages
 # Create your views here.
 
 def index(request):
-
     if not 'userid' in request.session:
         return redirect('/')
     else:
@@ -40,3 +39,17 @@ def delete(request, proj_id):
     this_project = Project.objects.get(id = proj_id)
     this_project.delete()
     return redirect('/dashboard')
+def detail(request, proj_id):
+    this_project = Project.objects.get(id=proj_id)
+    this_user = User.objects.get(id= request.session['userid'])
+    context = {
+        'project' : this_project,
+        'user' : this_user
+    }
+    return render(request, 'view.html', context)
+
+def remove(request, proj_id):
+    this_project = Project.objects.get(id=proj_id)
+    this_user = User.objects.get(id= request.POST['userid'])
+    this_project.working.remove(this_user)
+    return redirect
