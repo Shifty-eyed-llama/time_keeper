@@ -32,8 +32,8 @@
                 {% for project in all_projects %}
                 <tr>
                     <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
-                    <td>{{project.start_date}}</td>
-                    <td>{{project.end_date}}</td>
+                    <td>{{project.start_date | safe}}</td>
+                    <td>{{project.end_date | safe }}</td>
                     <td>{{project.created_by.firstName}}</td>
                     <td><a href="/dashboard/delete/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
                     </td>
