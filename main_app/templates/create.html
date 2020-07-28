@@ -4,43 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start a Project</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
 </head>
 <body>
-    <div id="head">
-        <h1>Welcome {{ user.first_name }}</h1>
-        <p>Lets start a new Project</p>
-        <p><a href="/end_session">Log Out</a></p>
+    <div class="header">
+        <a href="/end_session">Logout</a>
+        <a href="/dashboard">Go back</a>
+        <h1>Welcome,</h1>
+        <h1><a href="/dashboard/profile">{{user.firstName}} {{user.lastName}}</a></h1>
+        <h3>What would you like to do?</h3>
     </div>
-    <div id="new_project">
-        <form action="/dashboard/create" method="post">
-            {% csrf_token %}
-        <p>
-            Project Name:
-            <input type="text" name="title" id="">
-        </p>
-        <p>
-            Start Date:
-            <input type="date" name="start" id="">
-        </p>
-        <p>
-            Deadline:
-            <input type="date" name="end" id="">
-        </p>
-        <p>
-            Would you like to assign anyone?
-            <select name="working" id="">
-                {% for user in users %}
-                <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-                {% endfor %}
-            </select>
-        </p>
-        <p>
-            Would you like to add a message?
-            <textarea name="message" id="" cols="60" rows="3"></textarea>
-        </p>
-        <button type="submit">Create Project</button>
-    </form>
+    <div class="wrapper">
+        <div class="projects">
+            <form action="/dashboard/create" method="post">
+                {% csrf_token %}
+                <div class="inputs">
+                    <label for="title">Project title</label>
+                    <input type="text" name="title" id="title">
+                </div>
+                <div class="inputs">
+                    <label for="start">Project start date</label>
+                    <input type="date" name="start" id="start">
+                </div>
+                <div class="inputs">
+                    <label for="end">Project end date</label>
+                    <input type="date" name="end" id="end">
+                </div>
+                <div class="inputs">
+                    <label for="notes">Project notes</label>
+                    <textarea name="message" id="notes" cols="60" rows="3"></textarea>
+                </div>
+                <div class="inputs">
+                    <label for="addUser">Assign someone to your project</label>
+                    <select name="working" id="addUser">
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Create Project</button>
+            </form>
+        </div>
     </div>
-    
 </body>
 </html>
