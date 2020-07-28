@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start a Project</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
 </head>
 <body>
     <div class="header">
-        <a href="/end_session">Logout</a>
-        <a href="/dashboard">Go back</a>
+        <div class="links">
+            <a href="/dashboard">Go back</a>
+            <a href="/end_session">Logout</a>
+        </div>
         <h1>Welcome,</h1>
         <h1><a href="/dashboard/profile">{{user.firstName}} {{user.lastName}}</a></h1>
         <h3>What would you like to do?</h3>
@@ -20,23 +22,33 @@
             <form action="/dashboard/create" method="post">
                 {% csrf_token %}
                 <div class="inputs">
-                    <label for="title">Project title</label>
+                    <p>
+                        <label for="title">Project title</label>
+                    </p>
                     <input type="text" name="title" id="title">
                 </div>
                 <div class="inputs">
-                    <label for="start">Project start date</label>
+                    <p>
+                        <label for="start">Project start date</label>
+                    </p>
                     <input type="date" name="start" id="start">
                 </div>
                 <div class="inputs">
-                    <label for="end">Project end date</label>
+                    <p>
+                        <label for="end">Project end date</label>
+                    </p>
                     <input type="date" name="end" id="end">
                 </div>
                 <div class="inputs">
-                    <label for="notes">Project notes</label>
-                    <textarea name="message" id="notes" cols="60" rows="3"></textarea>
+                    <p>
+                        <label for="notes">Project notes</label>
+                    </p>
+                    <textarea name="message" id="notes" cols="60" rows="10"></textarea>
                 </div>
                 <div class="inputs">
-                    <label for="addUser">Assign someone to your project</label>
+                    <p>
+                        <label for="addUser">Assign someone to your project</label>
+                    </p>
                     <select name="working" id="addUser">
                         {% for user in users %}
                         <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>

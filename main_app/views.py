@@ -53,3 +53,7 @@ def remove(request, proj_id):
     this_user = User.objects.get(id= request.POST['userid'])
     this_project.working.remove(this_user)
     return redirect
+
+def edit(request, proj_id):
+    pass
+    

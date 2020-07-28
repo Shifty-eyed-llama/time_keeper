@@ -4,65 +4,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Project</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/view.css' %}">
 </head>
 <body>
-    <div id="header">
-        <h1>Welcome {{ user.firstName }}</h1>
-        <p><a href="/end_session">Log Out</a></p>
+    <div class="header">
+        <div class="links">
+            <a href="/dashboard">Go back</a>
+            <a href="/end_session">Logout</a>
+        </div>
+        <h1>Welcome, {{user.firstName}}</h1>
+        <h3>What would you like to do?</h3>
     </div>
-    {% if project.created_by.id != user.id %}
-    <div id="project">
-        <h2>{{ project.title }}</h2>
-        <h4>Created by: {{ project.created_by.firstName}}</h4>
-        <h5>Start Date: {{ project.start_date }}</h5>
-        <h5>Due By: {{ project.end_date }}</h5>
-        <p>Currently being worked on by:
-            {% if project.working > 1 %}
-            <ul>
-                {% for user in project.working.all %}
-                <li>{{ user.firstName }} {{ user.lastName }}</li>
-                {% endfor %}
-            </ul>
+    <div class="wrapper">
+        <div class="projects">
+        {% if project.created_by.id != user.id %}
+            <h2>{{ project.title }}</h2>
+            <h4>Created by: {{ project.created_by.firstName}}</h4>
+            <h5>Start Date: {{ project.start_date }}</h5>
+            <h5>Due By: {{ project.end_date }}</h5>
+            <p>Currently being worked on by:
+                {% if project.working > 1 %}
+                <ul>
+                    {% for user in project.working.all %}
+                    <li>{{ user.firstName }} {{ user.lastName }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>Looks like it is just you.</p>
+                {% endif %}
+            </p>
             {% else %}
-            <p>Looks like it is just you.</p>
-            {% endif %}
-        </p>
+            <form action="/dashboard/edit/{{ project.id }}" method="post">
+                {% csrf_token %}
+                <h1>Make changes to your project</h1>
+                <div class="inputs">
+                    <p>
+                        <label for="title">Project title</label>
+                    </p>
+                    <input type="text" name="title" id="title" value="{{project.title}}">
+                </div>
+                <div class="inputs">
+                    <p>
+                        <label for="start">Project start date</label>
+                    </p>
+                    <input type="date" name="start" id="start" value="{{project.start_date|date:'Y-m-d'}}">
+                </div>
+                <div class="inputs">
+                    <p>
+                        <label for="end">Project end date</label>
+                    </p>
+                    <input type="date" name="end" id="end" value="{{project.end_date|date:'Y-m-d'}}">
+                </div>
+                <div class="inputs">
+                    <p>
+                        <label for="notes">Project notes</label>
+                    </p>
+                    <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.messages}}"></textarea>
+                </div>
+                <div class="inputs">
+                    <p>
+                        <label for="addUser">Assign someone to your project</label>
+                    </p>
+                    <select name="working" id="addUser">
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit">Create Project</button>
+            </form>
+        </div>
+        {% endif %}
+        {% if messages in project %}
+        <div id="messages">
+            <p>{{ project.messages }}</p>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <form action="/dashboard/edit/{{ project.id }}" method="post">
-    {% csrf_token %}
-    <p>
-        Project Name:
-        <input type="text" name="title" id="" value="{{ project.title }}">
-    </p>
-    <p>
-        Start Date:
-        <input type="date" name="start" id="" value="{{ project.start_date }}">
-    </p>
-    <p>
-        Deadline:
-        <input type="date" name="end" id="" value="{{ project.end_date }}">
-    </p>
-    <p>
-        Would you like to assign anyone?
-        <select name="working" id="">
-            {% for user in users %}
-            <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-            {% endfor %}
-        </select>
-    </p>
-    <p>
-        Would you like to add a message?
-        <textarea name="message" id="" cols="60" rows="3" placeholder='{{ project.messages }}'></textarea>
-    </p>
-    <button type="submit">Create Project</button>
-    </form>
-    {% endif %}
-    {% if messages in project %}
-    <div id="messages">
-        <p>{{ project.messages }}</p>
-    </div>
-    {% endif %}
-    
 </body>
 </html>
