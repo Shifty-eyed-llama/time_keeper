@@ -29,12 +29,6 @@ def create(request):
     end = request.POST['end']
     notes = request.POST['message']
     new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
-
-    if working:
-        new_proj.working.add(working)
-    print(working, 'maybe?')
-    for each in working:
-        print(working, 'working')
     return redirect('/dashboard')
 
 def delete(request, proj_id):
