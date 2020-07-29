@@ -40,9 +40,8 @@ class User(models.Model):
     email = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
 
-    # "made_by" R/T class Project
+    # "users_time" R/T class Project
     # "messages" R/T class Project
-    # "working_on" R/T class Project
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

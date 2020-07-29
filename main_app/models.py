@@ -1,11 +1,12 @@
 from django.db import models
 from login_and_registration_app.models import *
-import datetime
+from django.utils.timezone import utc
+from datetime import datetime
 
 
 # Create your models here.
 
-class ProjectManaget(models.Manager):
+class ProjectManager(models.Manager):
     def project_validate(self, postData):
         errors = {}
         date = postData['start']
@@ -22,27 +23,29 @@ class Project(models.Model):
     end_date = models.DateField()
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
-    working = models.ManyToManyField(User, related_name = "working_on")
+    # working = models.ManyToManyField(User, related_name = "working_on")
+    objects = ProjectManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Message(models.Model):
-    note = models.TextField(null=True)
+# class Message(models.Model):
+#     note = models.TextField(null=True)
 
-    created_by = models.ForeignKey(User, related_name='notes', on_delete=models.CASCADE)
+#     created_by = models.ForeignKey(User, related_name='notes', on_delete=models.CASCADE)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
-class Time(models.Model):
-    start_time = models.TimeField(auto_now=False, auto_now_add=False)
-    end_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
+class Timekeeper(models.Model):
+    clock_in = models.DateTimeField(null=True)
+    clock_out = models.DateTimeField(null=True)
+    total_time = models.DurationField(null=True, blank=True)
+    entire_time = models.FloatField(null=True)
+    is_working = models.BooleanField(default=False)
 
-    total_time = datetime.timedelta()
-
-    user = models.ForeignKey(User, related_name='time', on_delete=models.CASCADE)
-    project = models.ForeignKey(Project,related_name='project_time', on_delete=models.CASCADE)
+    users_time = models.ForeignKey(User, related_name="time_of_user", on_delete=models.CASCADE)
+    proj_time = models.ForeignKey(Project, related_name = 'time_of_project', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

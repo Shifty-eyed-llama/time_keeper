@@ -81,6 +81,57 @@
             <p>{{ project.messages }}</p>
         </div>
         {% endif %}
+    
+
+    <div id="testing">
+        {% load app_filters %}
+        <h1>Welcome to Homepage {{ user.firstName }}</h1>
+        <h2>You've successfully registered (or logged in)!</h2>
+        <a href="/end_session">Sign Out</a>
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>
+                        Clock In
+                    <!-- <a href="/clockin">Clock In</a> -->
+                    </th>
+                    <th> Clock Out
+                        <!-- <a href="/clockout">Clock Out</a> -->
+                    </th>
+                    <th>Total Time</th>
+                    <th>Time Since</th>
+                    <th>Entire Time</th>
+                    <th>Actions</th>
+                </tr>
+                {% for time in proj_times reversed %}
+                <tr>
+                    <td>{{ time.created_at|date:"D: M d, Y" }}</td>
+                    <td>{{ time.clock_in|time }}</td>
+                    {% if time.clock_in != time.clock_out %}
+                    <td>{{ time.clock_out|time   }}</td>
+                    {% else %}
+                    <td>Time running...</td>
+                    {% endif %}
+                    <td>{{ time.total_time | duration}}</td>
+                    <td>{{ time.clock_in|timesince:time.clock_out }}</td>
+                    <td class="val">{{ time.entire_time }}</td>
+                    <td><a href="/dashboard/delete_time/{{ time.id }}">Delete Time Entry</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+            <p>{{ varsum | display }}</p>
+        </div>
+        {% if last_time.is_working == True %}
+        <form action="/dashboard/clockout/{{ project.id }}">
+            <button type="submit" style="background-color: red">Clock Out</button>
+        </form>
+        {% else %}
+        <form action="/dashboard/clockin/{{ project.id }}">
+            <button type="submit" >Clock In</button>
+        </form>
+        {% endif %}
     </div>
+</div>
 </body>
 </html>
