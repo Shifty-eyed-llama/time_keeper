@@ -37,7 +37,7 @@ class Message(models.Model):
 
 class Time(models.Model):
     start_time = models.TimeField(auto_now=False, auto_now_add=False)
-    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False, null=True)
 
     total_time = datetime.timedelta()
 

@@ -37,6 +37,8 @@
                     <td>{{project.created_by.firstName}}</td>
                     <td><a href="/dashboard/delete/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
                     </td>
+                    <td><a href="/dashboard/start_time/{{project.id}}">Start</a></td>
+                    <td><a href="/dashboard/end_time/{{project.id}}">end</a></td>
                 </tr>
                 {% endfor %}
             </table>
