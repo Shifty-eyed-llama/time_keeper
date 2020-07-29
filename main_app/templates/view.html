@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/view.css' %}">
 </head>
 <body>
+    {% load app_filters %}
     <div class="header">
         <div class="links">
             <a href="/dashboard">Go back</a>
@@ -18,7 +19,6 @@
     </div>
     <div class="wrapper">
         <div class="projects">
-        {% if project.created_by.id != user.id %}
             <h2>{{ project.title }}</h2>
             <h4>Created by: {{ project.created_by.firstName}}</h4>
             <h5>Start Date: {{ project.start_date }}</h5>
@@ -34,60 +34,15 @@
                 <p>Looks like it is just you.</p>
                 {% endif %}
             </p>
-            {% else %}
-            <form action="/dashboard/edit/{{ project.id }}" method="post">
-                {% csrf_token %}
-                <h1>Make changes to your project</h1>
-                <div class="inputs">
-                    <p>
-                        <label for="title">Project title</label>
-                    </p>
-                    <input type="text" name="title" id="title" value="{{project.title}}">
-                </div>
-                <div class="inputs">
-                    <p>
-                        <label for="start">Project start date</label>
-                    </p>
-                    <input type="date" name="start" id="start" value="{{project.start_date|date:'Y-m-d'}}">
-                </div>
-                <div class="inputs">
-                    <p>
-                        <label for="end">Project end date</label>
-                    </p>
-                    <input type="date" name="end" id="end" value="{{project.end_date|date:'Y-m-d'}}">
-                </div>
-                <div class="inputs">
-                    <p>
-                        <label for="notes">Project notes</label>
-                    </p>
-                    <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.messages}}"></textarea>
-                </div>
-                <div class="inputs">
-                    <p>
-                        <label for="addUser">Assign someone to your project</label>
-                    </p>
-                    <select name="working" id="addUser">
-                        {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <button type="submit">Edit Project</button>
-            </form>
+        {% if notes %}
+        <div id="notes">
+            {% for note in notes %}
+            <p>{{ note.note}} -- {{note.created_by.firstName}}</p>
+            {% endfor %}
         </div>
         {% endif %}
-        {% if messages in project %}
-        <div id="messages">
-            <p>{{ project.messages }}</p>
-        </div>
-        {% endif %}
-    
 
     <div id="testing">
-        {% load app_filters %}
-        <h1>Welcome to Homepage {{ user.firstName }}</h1>
-        <h2>You've successfully registered (or logged in)!</h2>
-        <a href="/end_session">Sign Out</a>
         <div class="table">
             <table>
                 <tr>
@@ -100,8 +55,6 @@
                         <!-- <a href="/clockout">Clock Out</a> -->
                     </th>
                     <th>Total Time</th>
-                    <th>Time Since</th>
-                    <th>Entire Time</th>
                     <th>Actions</th>
                 </tr>
                 {% for time in proj_times reversed %}
@@ -113,14 +66,11 @@
                     {% else %}
                     <td>Time running...</td>
                     {% endif %}
-                    <td>{{ time.total_time | duration}}</td>
-                    <td>{{ time.clock_in|timesince:time.clock_out }}</td>
-                    <td class="val">{{ time.entire_time }}</td>
                     <td><a href="/dashboard/delete_time/{{ time.id }}">Delete Time Entry</a></td>
                 </tr>
                 {% endfor %}
             </table>
-            <p>{{ varsum | display }}</p>
+            <p id="total">Total time: {{ varsum | display }}</p>
         </div>
         {% if last_time.is_working == True %}
         <form action="/dashboard/clockout/{{ project.id }}">

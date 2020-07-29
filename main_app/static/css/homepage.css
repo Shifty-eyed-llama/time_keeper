@@ -30,11 +30,23 @@ div.wrapper{
 div.projects{
     padding: 5%;
 }
-table, tr, th, td{
+/* table, tr, th, td{
     border-collapse: collapse;
     border: 1px solid black;
     padding: 5px 10px;
-}
+} */
 a:hover{
     transform: scale(1.1);
+}
+th{
+    border-collapse: collapse;
+    padding: 10px;
+    background-color: lightblue;
+    border: 1px solid black;
+}
+table, td{
+    border-collapse: collapse;
+    padding: 10px;
+    background-color: deepskyblue;
+    border-bottom: 1px solid black;
 }
