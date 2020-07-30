@@ -14,6 +14,8 @@ urlpatterns = [
     path('clockout/<int:proj_id>', views.clockout),
     path('delete_time/<int:time_id>', views.delete_time),
     path('new_note/<int:proj_id>', views.new_note),
+    path('profile', views.view_profile),
+    path('create_file', views.create_post),
     path('new_comment/<int:proj_id>', views.new_comment),
     path('join_project/<int:proj_id>', views.join_project),
     path('set_timezone', views.set_timezone),
