@@ -23,36 +23,26 @@
                 <div class="inputs">
                     <p>
                         <label for="title">Project title</label>
+                        <input type="text" name="title" id="title">
                     </p>
-                    <input type="text" name="title" id="title">
                 </div>
                 <div class="inputs">
                     <p>
                         <label for="start">Project start date</label>
+                        <input type="date" name="start" id="start">
                     </p>
-                    <input type="date" name="start" id="start">
                 </div>
                 <div class="inputs">
                     <p>
                         <label for="end">Project end date</label>
-                    </p>
-                    <input type="date" name="end" id="end">
+                        <input type="date" name="end" id="end">
+                     </p>
                 </div>
                 <div class="inputs">
                     <p>
                         <label for="notes">Project notes</label>
                     </p>
                     <textarea name="message" id="notes" cols="60" rows="10"></textarea>
-                </div>
-                <div class="inputs">
-                    <p>
-                        <label for="addUser">Assign someone to your project</label>
-                    </p>
-                    <select name="working" id="addUser">
-                        {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-                        {% endfor %}
-                    </select>
                 </div>
                 <button type="submit">Create Project</button>
             </form>

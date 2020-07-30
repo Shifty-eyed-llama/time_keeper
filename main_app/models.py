@@ -24,18 +24,20 @@ class Project(models.Model):
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
     # working = models.ManyToManyField(User, related_name = "working_on")
+    # notes = related Message
     objects = ProjectManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-# class Message(models.Model):
-#     note = models.TextField(null=True)
+class Message(models.Model):
+    note = models.TextField(null=True)
 
-#     created_by = models.ForeignKey(User, related_name='notes', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name='notes', on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='notes', on_delete=models.CASCADE)
 
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Timekeeper(models.Model):
     clock_in = models.DateTimeField(null=True)

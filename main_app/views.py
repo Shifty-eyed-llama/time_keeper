@@ -29,8 +29,10 @@ def create(request):
     title = request.POST['title']
     start = request.POST['start']
     end = request.POST['end']
-    # notes = request.POST['message']
+    notes = request.POST['message']
     new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    if notes:
+        Message.objects.create(note = notes , created_by = user, project = new_proj)
     return redirect('/dashboard')
 
 def delete_project(request, proj_id):
@@ -41,11 +43,13 @@ def detail(request, proj_id):
     this_user = User.objects.get(id= request.session['userid'])
     this_project = Project.objects.get(id=proj_id)
     time = Timekeeper.objects.filter(proj_time=this_project) # only project times (hopefully)
+    notes = this_project.notes.all()
     last_time = Timekeeper.objects.last()
     varsum = 0
     for i in time:
         varsum += i.entire_time
     context = {
+        'notes' : notes,
         'project' : this_project,
         'user' : this_user,
         'all_user' : User.objects.all(),
@@ -94,14 +98,20 @@ def edit_project(request, proj_id):
     title = request.POST['title']
     start = request.POST['start']
     end = request.POST['end']
-    working = request.POST['working']
     notes = request.POST['message']
     this_project.title = title
     this_project.start_date = start
     this_project.end_date = end
     this_project.save()
-    for value in request.POST['working']:
-        this_user = User.objects.get(id=request.POST['working'])
-        this_project.working.add(this_user)
+    if notes:
+        Message.objects.create(note = notes , created_by = user, project = this_project)
+    return redirect('/dashboard')
+def new_note(request, proj_id):
+    this_project = Project.objects.get(id=proj_id)
+    Message.objects.create(
+        note = request.POST['note'] , 
+        created_by = request.session['userid'],
+        project = this_project
+    )
     return redirect('/dashboard')
 

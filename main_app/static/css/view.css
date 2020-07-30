@@ -50,3 +50,20 @@ button:hover{
 a:hover{
     transform: scale(1.1);
 }
+th{
+    border-collapse: collapse;
+    padding: 10px;
+    background-color: lightblue;
+    border: 1px solid black;
+}
+table, td{
+    border-collapse: collapse;
+    padding: 10px;
+    background-color: deepskyblue;
+    border-bottom: 1px solid black;
+}
+#total {
+    border: 1px solid black;
+    padding: 10px;
+    background-color: lightblue;
+}
