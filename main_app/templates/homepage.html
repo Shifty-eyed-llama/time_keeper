@@ -43,6 +43,11 @@
                     <td>{{project.start_date | safe}}</td>
                     <td>{{project.end_date | safe }}</td>
                     <td>{{project.created_by.firstName}}</td>
+                    {% for worker in project.projects_working_on.all %}
+                    <td style="display: block;">{{ worker.firstName }}</td>
+                    {% endfor %}
+                    <td><a href="/dashboard/join_project/{{ project.id }}">Join project</a>
+                    </td>
                     <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
                     </td>
                 </tr>

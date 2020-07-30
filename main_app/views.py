@@ -32,6 +32,8 @@ def create(request):
     end = request.POST['end']
     notes = request.POST['message']
     new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    last_proj = Project.objects.last()
+    user.projects_assigned_to.add(last_proj)
     if notes:
         Message.objects.create(note = notes , created_by = user, project = new_proj)
     return redirect('/dashboard')
@@ -109,13 +111,6 @@ def edit_project(request, proj_id):
     return redirect('/dashboard')
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
-    note = request.POST['note']
-    Message.objects.create(
-        note = note, 
-        created_by = User.objects.get(id =request.session['userid']),
-        project = this_project
-    )
-    return redirect('/dashboard/view/'+str(proj_id))
 
 def view_profile(request):
     if not 'userid' in request.session:
@@ -136,3 +131,30 @@ def create_post(request):
 
     Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
     return redirect('/dashboard/profile')
+
+    this_user = User.objects.get(id=request.session['userid'])
+    Message.objects.create(
+        note = request.POST['notes'], 
+        created_by = this_user,
+        project = this_project,
+    )
+    return redirect('/dashboard/view/' + str(proj_id))
+
+def new_comment(request, proj_id):
+    this_message = Message.objects.get(id=request.POST['message_id'])
+    this_user = User.objects.get(id=request.session['userid'])
+    Comment.objects.create(
+        comments = request.POST['comments'], 
+        user_comments = this_user,
+        message_comments = this_message,
+    )
+    return redirect('/dashboard/view/' + str(proj_id))
+
+def join_project(request, proj_id):
+    this_user = User.objects.get(id=request.session['userid'])
+    this_project = Project.objects.get(id=proj_id)
+    this_project.projects_working_on.add(this_user)
+    return redirect('/dashboard')
+
+
+

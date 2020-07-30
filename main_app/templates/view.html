@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Project</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/view.css' %}">
+    <script>
+        $(document).ready(function(){
+  $(".show_comments").click(function(){
+    $(".comment_boxes").toggle();
+    $(".hide_comments").show();
+    $(".show_comments").hide();
+  });
+  $(".hide_comments").click(function(){
+    $(".comment_boxes").toggle();
+    $(".show_comments").show();
+    $(".hide_comments").hide();
+  });
+});
+    </script>
 </head>
 <body>
     {% load app_filters %}
@@ -21,14 +36,31 @@
         </div>
         
         <h1>Welcome, {{user.firstName}}</h1>
-        <h3>What would you like to do?</h3>
+        <div class="worked_at">
+            <p id="total">Your total time: {{ varsum | display }}</p>
+            <p id="total">You last <span style="color: green; font-weight: bold;">started</span> working at: <span style="font-weight: bold;">{{ last_time.clock_in|time }}</span></p>
+            {% if last_time.clock_in != last_time.clock_out %}
+            <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ last_time.clock_out|time }}</span></p>
+            {% endif %}
+        </div>
+            <div class="clock_buttons">
+            {% if last_time.is_working == True %}
+            <form action="/dashboard/clockout/{{ project.id }}">
+                <button type="submit" style="background-color: red">Clock Out</button>
+            </form>
+            {% else %}
+            <form action="/dashboard/clockin/{{ project.id }}">
+                <button type="submit" style="background-color: green">Clock In</button>
+            </form>
+            {% endif %}
+        </div>
     </div>
     <div class="wrapper">
         <div class="projects">
-            <h2>{{ project.title }}</h2>
-            <h4>Created by: {{ project.created_by.firstName}}</h4>
-            <h5>Start Date: {{ project.start_date }}</h5>
-            <h5>Due By: {{ project.end_date }}</h5>
+            <div class="title">
+                <h1>Project: {{ project.title }}</h1>
+                <h4>Due: {{ project.end_date }}</h4>
+            </div>
             <p>Currently being worked on by:
                 {% if project.working > 1 %}
                 <ul>
@@ -40,21 +72,40 @@
                 <p>Looks like it is just you.</p>
                 {% endif %}
             </p>
-        {% if notes %}
-        <div id="notes">
-            {% for note in notes %}
-            <p>{{ note.note}} -- {{note.created_by.firstName}}</p>
+            <div class="add_message">
+                <form action="/dashboard/new_note/{{project.id}}" method="post">
+                    {% csrf_token %}
+                    <label for="message">Create a message</label>
+                    <textarea name="notes" id="message" placeholder="Write something about the {{project.title}} project..." cols="60" rows="8"></textarea>
+                    <button type="submit">Post message</button>
+                </form>
+            </div>
+            {% if notes %}
+            {% for note in notes reversed %}
+            <div class="add_message">
+                <label for="">{{ note.created_at}} -- {{note.created_by.firstName}}</label>
+                <textarea readonly cols="30" rows="5">{{note.note}}</textarea>
+                <div class="add_comment">
+                    <form action="/dashboard/new_comment/{{project.id}}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="message_id" value="{{note.id}}">
+                        <!-- <label for="comment" style="font-size: 14px; font-weight: bold;">Post a comment</label> -->
+                        <div class="space">
+                            <textarea  name="comments" placeholder="Post a comment..." id="comment" cols="60" rows="3"></textarea>
+                            <div class="space2">
+                                <a href="javascript:void(0);" class="show_comments">See all comments</a>
+                                <a href="javascript:void(0);" class="hide_comments" style="display: none;">Hide all comments</a>
+                                <button type="submit">Post comment</button>
+                            </div>
+                        </div>
+                        {% for comment in note.comments_on_message.all %}
+                        <textarea readonly name="" class="comment_boxes" cols="30" rows="3" style="display: none;">{{user.firstName}} {{user.lastName}}: {{comment.comments}}</textarea>
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
             {% endfor %}
-        </div>
-        {% endif %}
-        <form action="/dashboard/new_note/{{ project.id}}" method="post">
-        {% csrf_token %}
-        <p>Notes:
-            <textarea name="note" id="" cols="60" rows="3"></textarea>
-        </p>
-        <button type="submit">Write Message</button>
-        </form>
-
+            {% endif %}
     <div id="testing">
         <div class="table">
             <table>
@@ -62,10 +113,8 @@
                     <th>Date</th>
                     <th>
                         Clock In
-                    <!-- <a href="/clockin">Clock In</a> -->
                     </th>
                     <th> Clock Out
-                        <!-- <a href="/clockout">Clock Out</a> -->
                     </th>
                     <th>Total Time</th>
                     <th>Actions</th>
@@ -83,17 +132,7 @@
                 </tr>
                 {% endfor %}
             </table>
-            <p id="total">Total time: {{ varsum | display }}</p>
         </div>
-        {% if last_time.is_working == True %}
-        <form action="/dashboard/clockout/{{ project.id }}">
-            <button type="submit" style="background-color: red">Clock Out</button>
-        </form>
-        {% else %}
-        <form action="/dashboard/clockin/{{ project.id }}">
-            <button type="submit" >Clock In</button>
-        </form>
-        {% endif %}
     </div>
 </div>
 </body>

@@ -11,8 +11,16 @@ div.header{
     background-color: #88cf8f;
     box-sizing: border-box;
 }
-div.header h1{
-    margin: 0px;
+div.clock_buttons{
+    width: 100%;
+}
+div.clock_buttons button{
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    border-radius: 10px;
 }
 div.links{
     width: 100%;
@@ -26,11 +34,81 @@ div.wrapper{
     width: 75%;
     height: auto;
     margin-left: 25%;
-    display: flex;
     box-sizing: border-box;
 }
 div.projects{
-    padding: 5%;
+    padding: 20px 5% 0 5%;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+}
+div.title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+div.title h1, div.title h4{
+    margin: 0;
+}
+div.add_message{
+    width: 75%;
+    box-sizing: border-box;
+}
+div.add_message form{
+    width: 100%;
+    position: relative;
+    margin-bottom: 100px;
+}
+div.add_message label, div.add_message button{
+    display: block;
+    padding: 5px;
+    background-color: #88cf8f;
+    border-radius: 5px;
+}
+div.add_message textarea{
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    padding: 10px;
+}
+div.add_message button{
+    position: absolute;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    right: 0;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: none;
+    cursor: pointer;
+}
+div.add_message button:hover{
+    transform: scale(1.1);
+}
+div.space{ 
+    margin-bottom: 5px;
+}
+div.space2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10px;
+}
+div.space2 a{
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+}
+div.space2 button{
+    position: relative;
+    margin: 0;
+    font-size: 14px;
+    text-align: center;
+}
+div.notes{
+    width: 500px;
+    border: 1px solid black;
 }
 label{
     font-size: 24px;
@@ -38,14 +116,12 @@ label{
 input, select{
     font-size: 24px;
 }
-button{
-    margin-top: 50px;
-    background-color: yellow;
-    font-size: 24px;
-    cursor: pointer;
-}
-button:hover{
-    transform: scale(1.1);
+textarea{
+    resize: vertical;
+    background-color: whitesmoke;
+    border-color: #88cf8f;
+    overflow-y: scroll;
+    border-radius: 5px;
 }
 a:hover{
     transform: scale(1.1);
@@ -63,7 +139,9 @@ table, td{
     border-bottom: 1px solid black;
 }
 #total {
-    border: 1px solid black;
-    padding: 10px;
-    background-color: lightblue;
+    border: 2px solid black;
+    background-color: whitesmoke;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
 }

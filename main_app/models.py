@@ -23,8 +23,7 @@ class Project(models.Model):
     end_date = models.DateField()
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
-    # working = models.ManyToManyField(User, related_name = "working_on")
-    # notes = related Message
+    projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
     objects = ProjectManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,6 +34,15 @@ class Message(models.Model):
 
     created_by = models.ForeignKey(User, related_name='notes', on_delete=models.CASCADE)
     project = models.ForeignKey(Project, related_name='notes', on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Comment(models.Model):
+    comments = models.TextField()
+
+    user_comments = models.ForeignKey(User, related_name="comments_by_user", on_delete=models.CASCADE)
+    message_comments = models.ForeignKey(Message, related_name="comments_on_message", on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
