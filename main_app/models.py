@@ -31,8 +31,7 @@ class Project(models.Model):
     end_date = models.DateField()
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
-    # working = models.ManyToManyField(User, related_name = "working_on")
-    # notes = related Message
+    projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
     objects = ProjectManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -88,6 +87,16 @@ class Timekeeper(models.Model):
 
     users_time = models.ForeignKey(User, related_name="time_of_user", on_delete=models.CASCADE)
     proj_time = models.ForeignKey(Project, related_name = 'time_of_project', on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Picture(models.Model):
+    subject = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to="profile_images")
+
+    users_pic = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

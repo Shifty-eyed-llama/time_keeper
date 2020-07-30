@@ -3,6 +3,7 @@ from .models import *
 from django.contrib import messages
 from datetime import datetime, timezone
 from django.db.models import F
+import uuid
 
 # Create your views here.
 
@@ -35,7 +36,10 @@ def create(request):
         for key, value in errors.items():
             messages.error(request, value)
         return redirect('/dashboard/new')
-    new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)         
+    new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    last_proj = Project.objects.last()
+    user.projects_assigned_to.add(last_proj)
+
     if notes:
         Message.objects.create(note = notes , created_by = user, project = new_proj)
     return redirect('/dashboard')
@@ -114,6 +118,27 @@ def edit_project(request, proj_id):
 
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
+
+def view_profile(request):
+    if not 'userid' in request.session:
+        return redirect('/')
+    else:
+        user = User.objects.get(id = request.session['userid'])
+        # user_projects = Project.objects.filter(user)
+        context = {
+            'user' : user,
+            # 'user_projects' : user_projects,
+        }
+        return render(request, 'profile.html', context)
+
+def create_post(request):
+    subject = request.POST['subject']
+    file_name = request.FILES["profile_picture"].name
+    request.FILES['profile_picture'].name = "{}.{}".format(uuid.uuid4().hex, file_name.split(".")[-1])
+
+    Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
+    return redirect('/dashboard/profile')
+
     this_user = User.objects.get(id=request.session['userid'])
     errors = Message.objects.message_validate(request.POST)
     if len(errors) > 0:
@@ -123,7 +148,7 @@ def new_note(request, proj_id):
     Message.objects.create(
         note = request.POST['notes'], 
         created_by = this_user,
-        project = this_project
+        project = this_project,
     )
     return redirect('/dashboard/view/' + str(proj_id))
 
@@ -141,6 +166,12 @@ def new_comment(request, proj_id):
         message_comments = this_message,
     )
     return redirect('/dashboard/view/' + str(proj_id))
+
+def join_project(request, proj_id):
+    this_user = User.objects.get(id=request.session['userid'])
+    this_project = Project.objects.get(id=proj_id)
+    this_project.projects_working_on.add(this_user)
+    return redirect('/dashboard')
 
 
 
