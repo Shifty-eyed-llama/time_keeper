@@ -98,14 +98,20 @@ def edit_project(request, proj_id):
     title = request.POST['title']
     start = request.POST['start']
     end = request.POST['end']
-    working = request.POST['working']
     notes = request.POST['message']
     this_project.title = title
     this_project.start_date = start
     this_project.end_date = end
     this_project.save()
-    for value in request.POST['working']:
-        this_user = User.objects.get(id=request.POST['working'])
-        this_project.working.add(this_user)
+    if notes:
+        Message.objects.create(note = notes , created_by = user, project = this_project)
+    return redirect('/dashboard')
+def new_note(request, proj_id):
+    this_project = Project.objects.get(id=proj_id)
+    Message.objects.create(
+        note = request.POST['note'] , 
+        created_by = request.session['userid'],
+        project = this_project
+    )
     return redirect('/dashboard')
 
