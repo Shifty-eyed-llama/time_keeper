@@ -23,8 +23,7 @@ class Project(models.Model):
     end_date = models.DateField()
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
-    # working = models.ManyToManyField(User, related_name = "working_on")
-    # notes = related Message
+    projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
     objects = ProjectManager()
 
     created_at = models.DateTimeField(auto_now_add=True)

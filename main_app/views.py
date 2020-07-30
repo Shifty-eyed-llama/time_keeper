@@ -31,6 +31,8 @@ def create(request):
     end = request.POST['end']
     notes = request.POST['message']
     new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    last_proj = Project.objects.last()
+    user.projects_assigned_to.add(last_proj)
     if notes:
         Message.objects.create(note = notes , created_by = user, project = new_proj)
     return redirect('/dashboard')
@@ -112,7 +114,7 @@ def new_note(request, proj_id):
     Message.objects.create(
         note = request.POST['notes'], 
         created_by = this_user,
-        project = this_project
+        project = this_project,
     )
     return redirect('/dashboard/view/' + str(proj_id))
 
@@ -126,5 +128,10 @@ def new_comment(request, proj_id):
     )
     return redirect('/dashboard/view/' + str(proj_id))
 
+def join_project(request, proj_id):
+    this_user = User.objects.get(id=request.session['userid'])
+    this_project = Project.objects.get(id=proj_id)
+    this_project.projects_working_on.add(this_user)
+    return redirect('/dashboard')
 
 

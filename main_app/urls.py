@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete_time/<int:time_id>', views.delete_time),
     path('new_note/<int:proj_id>', views.new_note),
     path('new_comment/<int:proj_id>', views.new_comment),
+    path('join_project/<int:proj_id>', views.join_project),
 ]
