@@ -16,8 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+################### SETTINGS FOR FILE UPLOAD##################
+from django.conf.urls.static import static
+from django.conf import settings
+###############################################
+
 urlpatterns = [
     path('', include('login_and_registration_app.urls')),
     path('dashboard/', include('main_app.urls')),
     path('admin/', admin.site.urls),
 ]
+
+
+############################### SETTINGS FOR FILE UPLOAD ###################
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#######################################################################

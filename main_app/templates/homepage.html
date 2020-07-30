@@ -11,11 +11,17 @@
         <div class="header">
             <div class="links">
                 <a href="/end_session">Logout</a>
+            <div id="pic">
+                {% for pic in user.profile.all %}
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="100px">
+                {% endfor %}
             </div>
-            <h1>Welcome, <a href="/dashboard/profile"></a>{{user.firstName}}</a></h1>
+                
+            </div>
+            <h1>Welcome, <a href="/dashboard/profile">{{user.firstName}}</a></h1>
             <h3>What would you like to do?</h3>
             <li><a href="/dashboard/new">Start a new project</a></li>
-            <li><a href="">Update your profile</a></li>
+            <li><a href="/">Update your profile</a></li>
         </div>
         <div class="wrapper">
             <div class="projects">

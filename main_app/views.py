@@ -3,6 +3,7 @@ from .models import *
 from django.contrib import messages
 from datetime import datetime, timezone
 from django.db.models import F
+import uuid
 
 # Create your views here.
 
@@ -116,3 +117,22 @@ def new_note(request, proj_id):
     )
     return redirect('/dashboard/view/'+str(proj_id))
 
+def view_profile(request):
+    if not 'userid' in request.session:
+        return redirect('/')
+    else:
+        user = User.objects.get(id = request.session['userid'])
+        # user_projects = Project.objects.filter(user)
+        context = {
+            'user' : user,
+            # 'user_projects' : user_projects,
+        }
+        return render(request, 'profile.html', context)
+
+def create_post(request):
+    subject = request.POST['subject']
+    file_name = request.FILES["profile_picture"].name
+    request.FILES['profile_picture'].name = "{}.{}".format(uuid.uuid4().hex, file_name.split(".")[-1])
+
+    Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
+    return redirect('/dashboard/profile')

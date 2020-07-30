@@ -51,3 +51,13 @@ class Timekeeper(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Picture(models.Model):
+    subject = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to="profile_images")
+
+    users_pic = models.ForeignKey(User, related_name="profile", on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

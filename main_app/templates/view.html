@@ -14,6 +14,12 @@
             <a href="/dashboard">Go back</a>
             <a href="/end_session">Logout</a>
         </div>
+        <div id="pic">
+            {% for pic in user.profile.all %}
+            <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="150px">
+            {% endfor %}
+        </div>
+        
         <h1>Welcome, {{user.firstName}}</h1>
         <h3>What would you like to do?</h3>
     </div>
