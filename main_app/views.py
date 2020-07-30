@@ -108,10 +108,11 @@ def edit_project(request, proj_id):
     return redirect('/dashboard')
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
+    note = request.POST['note']
     Message.objects.create(
-        note = request.POST['note'] , 
-        created_by = request.session['userid'],
+        note = note, 
+        created_by = User.objects.get(id =request.session['userid']),
         project = this_project
     )
-    return redirect('/dashboard')
+    return redirect('/dashboard/view/'+str(proj_id))
 

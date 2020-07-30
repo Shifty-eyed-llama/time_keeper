@@ -44,8 +44,9 @@
         <form action="/dashboard/new_note/{{ project.id}}" method="post">
         {% csrf_token %}
         <p>Notes:
-            <textarea name="notes" id="" cols="60" rows="3"></textarea>
+            <textarea name="note" id="" cols="60" rows="3"></textarea>
         </p>
+        <button type="submit">Write Message</button>
         </form>
 
     <div id="testing">
