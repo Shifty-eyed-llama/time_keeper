@@ -30,7 +30,12 @@ def create(request):
     start = request.POST['start']
     end = request.POST['end']
     notes = request.POST['message']
-    new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)
+    errors = Project.objects.project_validate(request.POST)
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/dashboard/new')
+    new_proj = Project.objects.create(title = title, start_date = start, end_date = end, created_by = user)         
     if notes:
         Message.objects.create(note = notes , created_by = user, project = new_proj)
     return redirect('/dashboard')
@@ -106,9 +111,15 @@ def edit_project(request, proj_id):
     if notes:
         Message.objects.create(note = notes , created_by = user, project = this_project)
     return redirect('/dashboard')
+
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
     this_user = User.objects.get(id=request.session['userid'])
+    errors = Message.objects.message_validate(request.POST)
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/dashboard/view/' + str(proj_id))
     Message.objects.create(
         note = request.POST['notes'], 
         created_by = this_user,
@@ -119,6 +130,11 @@ def new_note(request, proj_id):
 def new_comment(request, proj_id):
     this_message = Message.objects.get(id=request.POST['message_id'])
     this_user = User.objects.get(id=request.session['userid'])
+    errors = Comment.objects.comment_validate(request.POST)
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/dashboard/view/' + str(proj_id))
     Comment.objects.create(
         comments = request.POST['comments'], 
         user_comments = this_user,
