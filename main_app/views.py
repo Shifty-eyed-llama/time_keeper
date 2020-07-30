@@ -108,10 +108,23 @@ def edit_project(request, proj_id):
     return redirect('/dashboard')
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
+    this_user = User.objects.get(id=request.session['userid'])
     Message.objects.create(
-        note = request.POST['note'] , 
-        created_by = request.session['userid'],
+        note = request.POST['notes'], 
+        created_by = this_user,
         project = this_project
     )
-    return redirect('/dashboard')
+    return redirect('/dashboard/view/' + str(proj_id))
+
+def new_comment(request, proj_id):
+    this_message = Message.objects.get(id=request.POST['message_id'])
+    this_user = User.objects.get(id=request.session['userid'])
+    Comment.objects.create(
+        comments = request.POST['comments'], 
+        user_comments = this_user,
+        message_comments = this_message,
+    )
+    return redirect('/dashboard/view/' + str(proj_id))
+
+
 

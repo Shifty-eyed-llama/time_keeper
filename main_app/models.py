@@ -39,6 +39,15 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class Comment(models.Model):
+    comments = models.TextField()
+
+    user_comments = models.ForeignKey(User, related_name="comments_by_user", on_delete=models.CASCADE)
+    message_comments = models.ForeignKey(Message, related_name="comments_on_message", on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class Timekeeper(models.Model):
     clock_in = models.DateTimeField(null=True)
     clock_out = models.DateTimeField(null=True)
