@@ -3,11 +3,8 @@ from .models import *
 from django.contrib import messages
 from datetime import datetime, timezone
 from django.db.models import F
-<<<<<<< HEAD
 import pytz
-=======
 import uuid
->>>>>>> master
 
 # Create your views here.
 

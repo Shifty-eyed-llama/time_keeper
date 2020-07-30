@@ -30,9 +30,11 @@
             <a href="/end_session">Logout</a>
         </div>
         <div id="pic">
+            {% if user.profile.all > 0 %}
             {% for pic in user.profile.all %}
             <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="150px">
             {% endfor %}
+            {% endif %}
         </div>
         
         <h1>Welcome, {{user.firstName}}</h1>
