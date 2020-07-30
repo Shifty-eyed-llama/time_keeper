@@ -3,6 +3,7 @@ from .models import *
 from django.contrib import messages
 from datetime import datetime, timezone
 from django.db.models import F
+import pytz
 
 # Create your views here.
 
@@ -14,6 +15,7 @@ def index(request):
         context = {
             'user': currentUser,
             'all_projects' : Project.objects.all(),
+            'timezones': pytz.common_timezones,
         }
     return render(request, 'homepage.html', context)
 
@@ -134,4 +136,9 @@ def join_project(request, proj_id):
     this_project.projects_working_on.add(this_user)
     return redirect('/dashboard')
 
-
+def set_timezone(request):
+    if request.method == 'POST':
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/dashboard')
+    else:
+        return render(request, 'homepage.html', {'timezones': pytz.common_timezones})

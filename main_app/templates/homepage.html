@@ -18,6 +18,22 @@
             <li><a href="">Update your profile</a></li>
         </div>
         <div class="wrapper">
+            {% load tz %}
+            {% get_current_timezone as TIME_ZONE %}
+            <form action="/dashboard/set_timezone" method="POST">
+                {% csrf_token %}
+                <label for="timezone">
+                    Time zone:
+                </label>
+                <select name="timezone">
+                    {% for tz in timezones %}
+                    <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>
+                        {{ tz }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Set">
+            </form>
             <div class="projects">
                 <h1>All projects</h1>
                 <table>
