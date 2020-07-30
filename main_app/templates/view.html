@@ -41,6 +41,12 @@
             {% endfor %}
         </div>
         {% endif %}
+        <form action="/dashboard/new_note/{{ project.id}}" method="post">
+        {% csrf_token %}
+        <p>Notes:
+            <textarea name="notes" id="" cols="60" rows="3"></textarea>
+        </p>
+        </form>
 
     <div id="testing">
         <div class="table">

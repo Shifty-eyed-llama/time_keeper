@@ -27,30 +27,21 @@
             </p>
             <input type="date" name="end" id="end" value="{{project.end_date|date:'Y-m-d'}}">
         </div>
+
+        {% if this_project.notes %}
+        {% for note in this_project.notes.all %}
+        <p>{{ note.note }} -- {{note.created_by.firstName}} </p>
+        {% endfor %}
+        {% endif %}
         <div class="inputs">
             <p>
                 <label for="notes">Project notes</label>
             </p>
-            <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.messages}}"></textarea>
-        </div>
-        <div class="inputs">
-            <p>
-                <label for="addUser">Assign someone to your project</label>
-            </p>
-            <select name="working" id="addUser">
-                {% for user in users %}
-                <option value="{{ user.id }}">{{ user.firstName }} {{ user.lastName }}</option>
-                {% endfor %}
-            </select>
+            <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.notes}}"></textarea>
         </div>
         <button type="submit">Edit Project</button>
     </form>
     </div>
-    {% if messages in project %}
-    <div id="messages">
-        <p>{{ project.messages }}</p>
-    </div>
-    {% endif %}
     
 </body>
 </html>
