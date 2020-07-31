@@ -62,7 +62,7 @@
                         <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
                         <td>{{project.start_date | safe}}</td>
                         <td>{{project.end_date | safe }}</td>
-                        <td>project id {{project.id}}</td>
+                        <td>project {{ project.id }}</td>
                         {% if user.id == worker.id %}
                         <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a></td>
                         {% endif %}

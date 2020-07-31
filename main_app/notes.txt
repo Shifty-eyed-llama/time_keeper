@@ -3,7 +3,28 @@ usertime = user.time_of_user.all()     # all times of the user
 proj = Project.objects.get(id=proj_id)
 projtime = proj.time_of_project.all()      # all times in the project
 user_project_time = 0
-def timetrack(user):
+    for i in usertime:
+        if i in projtime:
+            user_project_time += i.entire_time
+
+worker = User.objects.get(id=worker_id)
+workertime = worker.time_of_user.all()     
+allproj = Project.objects.all()
+worker_project_time = 0
+for i in allproj:                                   # iterate over all the projects
+    proj = Project.objects.get(id=int(i))                # proj id for each project 
+    projtime = proj.time_of_project.all()           # projtime is all of the times for the project
+    for j in projtime:                            # iterate over all of the workers time objects
+        if j in workertime:                           # if the workers time object is in the time for the project
+            worker_project_time += j.entire_time    # sumadd the workers time in those time objects
+
+
+for i in allproj:
+    for j in i.time_of_project.all()
+        if j in workertime:
+            worker_project_time += j.entire_time
+
+user_project_time = 0
     for i in usertime:
         if i in projtime:
             user_project_time += i.entire_time

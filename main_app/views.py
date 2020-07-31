@@ -131,15 +131,13 @@ def view_profile(request, worker_id):
         user = User.objects.get(id=request.session['userid'])
         worker = User.objects.get(id=worker_id)
         workertime = worker.time_of_user.all()     # all times of the user
-        # proj = Project.objects.get(id=proj_id)
-        # projtime = proj.time_of_project.all()      # all times in the project
         worker_total_time = 0
         for i in workertime:
-            # if i in projtime:
             worker_total_time += i.entire_time
         context = {
             'user' : user,
             'worker': worker,
+            'workertime': workertime,
             'worker_total_time': worker_total_time,
         }
         return render(request, 'profile.html', context)
