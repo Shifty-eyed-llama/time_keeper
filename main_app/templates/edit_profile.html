@@ -58,7 +58,7 @@
                 <div class="user_info">
                     <h1>{{ user.firstName}}'s Profile</h1>
                     <h3>Email: {{ user.email }}</h3>
-                    <h3>Total Logged Hours:</h3>
+                    <h3>Total Logged Hours: {{ user_total_time | display }}</h3>
                 </div>
             </div>
             <table id='projects'>
