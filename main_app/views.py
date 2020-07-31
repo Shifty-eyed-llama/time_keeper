@@ -164,3 +164,8 @@ def set_timezone(request):
         return redirect('/dashboard')
     else:
         return render(request, 'homepage.html', {'timezones': pytz.common_timezones})
+def archive(request, proj_id):
+    project = Project.objects.get(id=proj_id)
+    project.done = True
+    project.save()
+    return redirect('/dashboard')

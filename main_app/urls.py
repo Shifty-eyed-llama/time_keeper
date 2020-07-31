@@ -19,4 +19,5 @@ urlpatterns = [
     path('new_comment/<int:proj_id>', views.new_comment),
     path('join_project/<int:proj_id>', views.join_project),
     path('set_timezone', views.set_timezone),
+    path('complete_project/<int:proj_id>', views.archive),
 ]

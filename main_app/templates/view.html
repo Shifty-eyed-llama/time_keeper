@@ -29,13 +29,13 @@
             <a href="/dashboard">Go back</a>
             <a href="/end_session">Logout</a>
         </div>
+        {% if user.profile.all > 0 %}
         <div id="pic">
-            {% if user.profile.all > 0 %}
             {% for pic in user.profile.all %}
             <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="150px">
             {% endfor %}
-            {% endif %}
         </div>
+        {% endif %}
         
         <h1>Welcome, {{user.firstName}}</h1>
         <div class="worked_at">
@@ -85,7 +85,7 @@
             {% if notes %}
             {% for note in notes reversed %}
             <div class="add_message">
-                <label for="">{{ note.created_at }} -- {{note.created_by.firstName}}</label>
+                <label for="">{{ note.created_at}} -- {{note.created_by.firstName}}</label>
                 <textarea readonly cols="30" rows="5">{{note.note}}</textarea>
                 <div class="add_comment">
                     <form action="/dashboard/new_comment/{{project.id}}" method="post">

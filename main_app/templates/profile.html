@@ -47,6 +47,7 @@
                 </thead>
                 <tbody>
             {% for project in user_projects %}
+            {% if project.done == False%}
             <tr>
                 <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
                 <td>{{project.start_date | safe}}</td>
@@ -54,11 +55,42 @@
                 <td>{{project.created_by.firstName}}</td>
                 <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
                 </td>
+                <td><a href="/dashboard/complete_project/{{project.id}}">Complete</a></td>
             </tr>
+            {% endif %}
             {% endfor %}
                 </tbody>
         </table>
     </div>
+</div>
+
+<div class="projects">
+    <h1>Past projects</h1>
+    <table id='projects'>
+        <thead>
+        <tr>
+            <th onclick="sortTable(0)">Project Title</th>
+            <th onclick="sortTable(1)">Start Date</th>
+            <th onclick="sortTable(2)">Due Date</th>
+            <th onclick="sortTable(3)">Created By</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% for project in user_projects %}
+    {% if project.done == True %}
+    <tr>
+        <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
+        <td>{{project.start_date | safe}}</td>
+        <td>{{project.end_date | safe }}</td>
+        <td>{{project.created_by.firstName}}</td>
+        <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
+        </td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+        </tbody>
+</table>
 </div>
 <script>
     function confirmDelete() {

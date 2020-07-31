@@ -21,6 +21,7 @@ class Project(models.Model):
     title = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField()
+    done = models.BooleanField(default=False)
 
     created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
     projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
