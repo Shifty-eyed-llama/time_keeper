@@ -25,7 +25,7 @@ def registration(request):
     else:
         user = User.objects.create(firstName=firstName, lastName=lastName, email=email, password=pw_hash)
         request.session['userid'] = user.id
-        return redirect('/dashboard/')
+        return redirect('/dashboard')
 
 def login(request):
     email = request.POST['email']
