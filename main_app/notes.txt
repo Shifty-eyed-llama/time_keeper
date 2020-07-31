@@ -1,0 +1,53 @@
+user = User.objects.get(id=request.session['userid'])
+usertime = user.time_of_user.all()     # all times of the user
+proj = Project.objects.get(id=proj_id)
+projtime = proj.time_of_project.all()      # all times in the project
+user_project_time = 0
+def timetrack(user):
+    for i in usertime:
+        if i in projtime:
+            user_project_time += i.entire_time
+
+
+        for j in projtime
+
+
+    # userproj = this_user.projects_assigned_to.get(id=proj_id)
+    # userprojtime = userproj.time_of_project.all()
+    # user_project_time_total = 0
+    # for i in userprojtime:
+    #     user_project_time_total += i.entire_time
+    # userproj = this_user.made_by.all()
+    # user_project_time_total = 0
+    # for i in userproj:
+    #     for j in i.time_of_project.all():
+    #         user_project_time_total += j.entire_time
+
+ALL TIME OF PROJECT 7
+>>> for i in proj.time_of_project.all():
+...     print(i.entire_time)
+...
+50138931.0
+984754.0
+1179557.0
+878773.0
+2982823.0
+2192745.0
+37346534.0
+58382743.0
+>>> user
+<User: User object (1)>
+
+ALL TIME OF USER 1
+>>> user.time_of_user.all()
+<QuerySet [<Timekeeper: Timekeeper object (22)>, <Timekeeper: Timekeeper object (23)>, <Timekeeper: Timekeeper object (24)>, <Timekeeper: Timekeeper object (26)>, <Timekeeper: Timekeeper object (31)>, <Timekeeper: Timekeeper object (32)>, <Timekeeper: Timekeeper object (33)>]>
+>>> for i in user.time_of_user.all():
+...     print(i.entire_time)
+...
+50138931.0
+984754.0
+1179557.0
+878773.0
+37346534.0
+14036965.0
+58382743.0

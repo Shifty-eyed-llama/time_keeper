@@ -39,22 +39,30 @@
         
         <h1>Welcome, {{user.firstName}}</h1>
         <div class="worked_at">
-            <p id="total">Your total time: {{ varsum | display }}</p>
+        {% if user in project.projects_working_on.all %}
+        <p>User in this project</p>
+        <p id="total">Total project time: {{ total_project_time|display }}</p>
+        <p id="total">Your total time: {{ user_project_time|display }}</p>
             <p id="total">You last <span style="color: green; font-weight: bold;">started</span> working at: <span style="font-weight: bold;">{{ last_time.clock_in|time }}</span></p>
             {% if last_time.clock_in != last_time.clock_out %}
-            <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ last_time.clock_out|time }}</span></p>
+                <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ last_time.clock_out|time }}</span></p>
             {% endif %}
         </div>
-            <div class="clock_buttons">
-            {% if last_time.is_working == True %}
+        <div class="clock_buttons">
+        {% if last_time.is_working == True %}
             <form action="/dashboard/clockout/{{ project.id }}">
                 <button type="submit" style="background-color: red">Clock Out</button>
             </form>
-            {% else %}
+        {% else %}
             <form action="/dashboard/clockin/{{ project.id }}">
                 <button type="submit" style="background-color: green">Clock In</button>
             </form>
-            {% endif %}
+        {% endif %}
+        <p><a href="/dashboard/leave_project/{{project.id}}">Leave this project</a></p>
+        {% else %}
+            <p>User NOT assigned to project</p>
+            <p><a href="/dashboard/join_project_stay/view/{{ project.id }}">Click here to join this project</a></p>
+        {% endif %}
         </div>
     </div>
     <div class="wrapper">
@@ -64,15 +72,11 @@
                 <h4>Due: {{ project.end_date }}</h4>
             </div>
             <p>Currently being worked on by:
-                {% if project.working > 1 %}
                 <ul>
-                    {% for user in project.working.all %}
+                    {% for user in project.projects_working_on.all %}
                     <li>{{ user.firstName }} {{ user.lastName }}</li>
                     {% endfor %}
                 </ul>
-                {% else %}
-                <p>Looks like it is just you.</p>
-                {% endif %}
             </p>
             <div class="add_message">
                 <form action="/dashboard/new_note/{{project.id}}" method="post">
@@ -113,13 +117,10 @@
             <table>
                 <tr>
                     <th>Date</th>
-                    <th>
-                        Clock In
-                    </th>
-                    <th> Clock Out
-                    </th>
-                    <th>Total Time</th>
+                    <th>Clock In</th>
+                    <th> Clock Out</th>
                     <th>Actions</th>
+                    <th>Created By</th>
                 </tr>
                 {% for time in proj_times reversed %}
                 <tr>
@@ -131,6 +132,7 @@
                     <td>Time running...</td>
                     {% endif %}
                     <td><a href="/dashboard/delete_time/{{ time.id }}">Delete Time Entry</a></td>
+                    <td>{{ time.users_time.firstName }}</td>
                 </tr>
                 {% endfor %}
             </table>

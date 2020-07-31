@@ -6,22 +6,22 @@
     <title>Time Management</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+    <script src="{% static 'js/homepage.js' %}"></script>
 </head>
 <body>
         <div class="header">
             <div class="links">
                 <a href="/end_session">Logout</a>
+            </div>
             <div id="pic">
                 {% for pic in user.profile.all %}
-                <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="100px">
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
                 {% endfor %}
             </div>
-                
-            </div>
-            <h1>Welcome, <a href="/dashboard/profile">{{user.firstName}}</a></h1>
+            <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
             <h3>What would you like to do?</h3>
             <li><a href="/dashboard/new">Start a new project</a></li>
-            <li><a href="/">Update your profile</a></li>
+            <li><a href="/dashboard/profile/{{user.id}}">Update your profile</a></li>
         </div>
         <div class="wrapper">
             {% load tz %}
@@ -60,7 +60,10 @@
                     <td>{{project.end_date | safe }}</td>
                     <td>{{project.created_by.firstName}}</td>
                     {% for worker in project.projects_working_on.all %}
-                    <td style="display: block;">{{ worker.firstName }}</td>
+                    <td style="display: block;">
+                        <a href="/dashboard/profile/{{ worker.id }}">
+                            {{ worker.firstName }}</td>
+                        </a>
                     {% endfor %}
                     <td><a href="/dashboard/join_project/{{ project.id }}">Join project</a>
                     </td>
@@ -72,50 +75,5 @@
             </table>
         </div>
     </div>
-    <script>
-        function confirmDelete() {
-            return confirm("Are you REALLY sure you want to delete this project?")
-        }
-
-
-function sortTable(n) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById("projects");
-  switching = true;
-  dir = "asc";
-  while (switching) {
-    switching = false;
-    rows = table.rows;
-    for (var j = rows.length-1; j >=0; j--){
-    for (i = 1; i < (rows.length - 1); i++) {
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch = true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;
-    } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-    }
-  }
-}
-    </script>
 </body>
 </html>

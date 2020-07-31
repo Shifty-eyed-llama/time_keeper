@@ -22,7 +22,7 @@ class Project(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
 
-    created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name ='made_by', on_delete=models.CASCADE)
     projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
     objects = ProjectManager()
 
