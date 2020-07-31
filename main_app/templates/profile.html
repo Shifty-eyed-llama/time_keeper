@@ -3,49 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{user.firstName}}'s Profile</title>
+    <title>{{worker.firstName}}'s Profile</title>
+    {% load static %}
+    {% load app_filters %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 </head>
 <body>
+    <!-- HEADER IS FOR THE USER -->
     <div class="header">
         <div class="links">
+            <a href="/dashboard">Go back</a>
             <a href="/end_session">Logout</a>
+        </div>
         <div id="pic">
             {% for pic in user.profile.all %}
-            <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="100px">
+            <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
             {% endfor %}
         </div>
-            
-        </div>
-        <h1>Welcome, <a href="/dashboard/profile"></a>{{user.firstName}}</a></h1>
+        <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
         <h3>What would you like to do?</h3>
         <li><a href="/dashboard/new">Start a new project</a></li>
-        <li><a href="">Update your profile</a></li>
-
-
-        <h1>Upload a picture</h1>
-        <form action="/dashboard/create_file" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="profile_picture" id="">
-            <p>
-                <input type="text" name="subject" id="">
-            </p>
-            <button type="submit">Submit</button>
-        </form>
+        <li><a href="/dashboard/profile/{{user.id}}">Update your profile</a></li>
     </div>
+    <!-- BELOW IS TO DISPLAY THE WORKER -->
     <div class="wrapper">
+        {% if user.id == worker.id %}
+        <div class="upload_photo">
+            <h1>Upload a picture</h1>
+            <form action="/dashboard/create_file" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="profile_picture" id="">
+                <p>
+                    <input type="text" name="subject" id="">
+                </p>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        {% endif %}
         <div class="projects">
-            <h1>All projects</h1>
+            <h1>{{ worker.firstName}}'s Profile</h1>
+            <h3>Email: {{ worker.email }}</h3>
+            <h3>Total Logged Hours: {{ worker_total_time|display }}</h3>
             <table id='projects'>
                 <thead>
-                <tr>
-                    <th onclick="sortTable(0)">Project Title</th>
-                    <th onclick="sortTable(1)">Start Date</th>
-                    <th onclick="sortTable(2)">Due Date</th>
-                    <th onclick="sortTable(3)">Created By</th>
-                    <th>Delete</th>
-                </tr>
+                    <tr>
+                        <th onclick="sortTable(0)">Project Title</th>
+                        <th onclick="sortTable(1)">Start Date</th>
+                        <th onclick="sortTable(2)">Due Date</th>
+                        <th onclick="sortTable(3)">Total Time</th>
+                        {% if user.id == worker.id %}
+                        <th>Action</th>
+                        {% endif %}
+                    </tr>
                 </thead>
                 <tbody>
+
             {% for project in user_projects %}
             {% if project.done == False%}
             <tr>
@@ -60,7 +72,8 @@
             {% endif %}
             {% endfor %}
                 </tbody>
-        </table>
+            </table>
+        </div>
     </div>
 </div>
 

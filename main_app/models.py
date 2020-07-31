@@ -31,7 +31,7 @@ class Project(models.Model):
     end_date = models.DateField()
     done = models.BooleanField(default=False)
 
-    created_by = models.ForeignKey(User, related_name = 'made_by', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name ='made_by', on_delete=models.CASCADE)
     projects_working_on = models.ManyToManyField(User, related_name = "projects_assigned_to")
     objects = ProjectManager()
 
