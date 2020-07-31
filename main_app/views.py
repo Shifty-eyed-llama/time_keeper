@@ -179,10 +179,14 @@ def view_profile(request, worker_id):
         return render(request, 'profile.html', context)
 
 def create_post(request):
-    subject = request.POST['subject']
+    user = User.objects.get(id = request.session['userid'])
+    if len(user.profile.all()) >= 1:
+        first_picture = user.profile.first()
+        first_picture.delete()
+
     file_name = request.FILES["profile_picture"].name
     request.FILES['profile_picture'].name = "{}.{}".format(uuid.uuid4().hex, file_name.split(".")[-1])
-    Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
+    Picture.objects.create(file_name = file_name, image = request.FILES['profile_picture'], users_pic = user)
     return redirect('/dashboard/edit_profile')
 
 def new_comment(request, proj_id):

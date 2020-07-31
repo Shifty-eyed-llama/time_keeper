@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{worker.firstName}}'s Profile</title>
+    <title>{{user.firstName}}'s Profile</title>
     {% load static %}
     {% load app_filters %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
@@ -48,10 +48,7 @@
                     <h1>Upload a profile picture</h1>
                     <form action="/dashboard/create_file" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="file" name="profile_picture" id="">
-                        <p>
-                            <input type="text" name="subject" id="">
-                        </p>
+                        <input type="file" name="profile_picture" id="" required>
                         <button type="submit">Submit</button>
                     </form>
                 </div>
