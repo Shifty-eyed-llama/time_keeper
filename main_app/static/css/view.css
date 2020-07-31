@@ -126,17 +126,23 @@ textarea{
 a:hover{
     transform: scale(1.1);
 }
-th{
-    border-collapse: collapse;
-    padding: 10px;
-    background-color: lightblue;
-    border: 1px solid black;
-}
 table, td{
     border-collapse: collapse;
     padding: 10px;
-    background-color: deepskyblue;
-    border-bottom: 1px solid black;
+    background-color: whitesmoke;
+    vertical-align: top;
+    border: 1px solid #88cf8f;
+}
+thead, tbody{
+    border-radius: 10px;
+    border: 1px solid #88cf8f;
+}
+th{
+    border-collapse: collapse;
+    font-size: 24px;
+    padding: 5px 10px;
+    background-color: #88cf8f;
+    font-weight: normal;
 }
 #total {
     border: 2px solid black;
@@ -144,4 +150,20 @@ table, td{
     padding: 15px;
     border-radius: 10px;
     text-align: center;
+}
+div.scroll{
+    width: 100%;
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #88cf8f;
+    resize: vertical;
+}
+div.projects_log{
+    width: 75%;
+    display: block;
+    box-sizing: border-box;
+}
+.table_1, .table_2{
+    width: 100%;
 }
