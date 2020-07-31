@@ -84,7 +84,7 @@
                 <td>{{project.end_date | safe }}</td>
                 <td>
                     {% for user in project.projects_working_on.all %}
-                        <a class="workers" href="/dashboard/profile/{{ worker.id }}">{{ worker.firstName }}</a>
+                        <a class="workers" href="/dashboard/profile/{{ user.id }}">{{ user.firstName }}</a>
                     {% endfor %}
                 </td>
                 <td>

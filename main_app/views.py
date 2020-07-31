@@ -251,9 +251,9 @@ def edit_profile(request):
         return redirect('/')
     else:
         currentUser = User.objects.get(id=request.session['userid'])
-        user = User.objects.get(id=worker_id)
-        user_projects = user.projects_assigned_to
-        usertime = user.time_of_user.all()     # all times of the user
+        # user = User.objects.get(id=worker_id)
+        user_projects = currentUser.projects_assigned_to
+        usertime = currentUser.time_of_user.all()     # all times of the user
         user_total_time = 0
         for i in usertime:
             user_total_time += i.entire_time
