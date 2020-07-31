@@ -21,4 +21,5 @@ urlpatterns = [
     path('join_project_stay/view/<int:proj_id>', views.join_project_stay),
     path('leave_project/<int:proj_id>', views.leave_project),
     path('set_timezone', views.set_timezone),
+    path('complete_project/<int:proj_id>', views.archive),
 ]
