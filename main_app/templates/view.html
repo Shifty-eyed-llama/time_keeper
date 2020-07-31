@@ -71,11 +71,46 @@
             </div>
             <p>Currently being worked on by:
                     {% for user in project.projects_working_on.all %}
-                        <li>
-                            <a href="/dashboard/profile/{{user.id}}">{{ user.firstName }} {{ user.lastName }}</a>
-                        </li>
+                    <p>
+                        <a href="/dashboard/profile/{{user.id}}">{{ user.firstName }} {{ user.lastName }}</a>
+                    </p>    
                     {% endfor %}
             </p>
+            <div class="projects_log">
+                <div class="time_log">
+                    <table class="table_1">
+                        <tr>
+                            <th>Date</th>
+                            <th>Clock In</th>
+                            <th> Clock Out</th>
+                            <th>Created By</th>
+                            {% if project in user.made_by.all %}
+                            <th>Actions</th>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </div>
+                <div class="scroll">
+                    <table class="table_2">
+                        {% for time in proj_times reversed %}
+                        <tr>
+                            <td>{{ time.created_at|date:"M d, Y" }}</td>
+                            <td>{{ time.clock_in|time }}</td>
+                            {% if time.clock_in != time.clock_out %}
+                            <td>{{ time.clock_out|time   }}</td>
+                            {% else %}
+                            <td>Time running...</td>
+                            {% endif %}
+                            <td>{{ time.users_time.firstName }}</td>
+                            {% if project in user.made_by.all %}
+                            <td><a href="/dashboard/delete_time/{{ time.id }}">Delete Time Entry</a></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+
             <div class="add_message">
                 {% if messages %}
                     <ul class="messages">    
@@ -117,32 +152,7 @@
             </div>
             {% endfor %}
             {% endif %}
-    <div id="testing">
-        <div class="table">
-            <table>
-                <tr>
-                    <th>Date</th>
-                    <th>Clock In</th>
-                    <th> Clock Out</th>
-                    <th>Actions</th>
-                    <th>Created By</th>
-                </tr>
-                {% for time in proj_times reversed %}
-                <tr>
-                    <td>{{ time.created_at|date:"D: M d, Y" }}</td>
-                    <td>{{ time.clock_in|time }}</td>
-                    {% if time.clock_in != time.clock_out %}
-                    <td>{{ time.clock_out|time   }}</td>
-                    {% else %}
-                    <td>Time running...</td>
-                    {% endif %}
-                    <td><a href="/dashboard/delete_time/{{ time.id }}">Delete Time Entry</a></td>
-                    <td>{{ time.users_time.firstName }}</td>
-                </tr>
-                {% endfor %}
-            </table>
         </div>
     </div>
-</div>
 </body>
 </html>
