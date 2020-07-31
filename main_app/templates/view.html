@@ -41,9 +41,9 @@
             {% if user in project.projects_working_on.all %}
                 <p id="total">Total project time: {{ total_project_time|display }}</p>
                 <p id="total">Your total time: {{ user_project_time|display }}</p>
-                <p id="total">You last <span style="color: green; font-weight: bold;">started</span> working at: <span style="font-weight: bold;">{{ last_time.clock_in|time }}</span></p>
+                <p id="total">You last <span style="color: green; font-weight: bold;">started</span> working at: <span style="font-weight: bold;">{{ ttime.clock_in|time }}</span></p>
                 {% if last_time.clock_in != last_time.clock_out %}
-                    <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ last_time.clock_out|time }}</span></p>
+                    <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ ttime.clock_out|time }}</span></p>
                 {% endif %}
         </div>
  
