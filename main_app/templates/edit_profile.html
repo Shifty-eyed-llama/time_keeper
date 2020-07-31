@@ -19,7 +19,7 @@
         <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
         <div id="pic">
             {% for pic in user.profile.all %}
-                <img src="{{MEDIA_URL}}{{pic.image }}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
             {% endfor %}
         </div>
         <h3>What would you like to do?</h3>
@@ -44,13 +44,24 @@
     <div class="wrapper">
         <div class="projects">
             <div class="profile_head">
-                {% for pic in worker.profile.all %}
+                <div class="upload">
+                    <h1>Upload a profile picture</h1>
+                    <form action="/dashboard/create_file" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="profile_picture" id="">
+                        <p>
+                            <input type="text" name="subject" id="">
+                        </p>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+                {% for pic in user.profile.all %}
                 <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" width="20%">
                 {% endfor %}
-                <div class="">
-                    <h1>{{ worker.firstName}}'s Profile</h1>
-                    <h3>Email: {{ worker.email }}</h3>
-                    <h3>Total Logged Hours: {{ worker_total_time|display }}</h3>
+                <div class="user_info">
+                    <h1>{{ user.firstName}}'s Profile</h1>
+                    <h3>Email: {{ user.email }}</h3>
+                    <h3>Total Logged Hours:</h3>
                 </div>
             </div>
             <table id='projects'>
@@ -75,24 +86,23 @@
                 <td>{{project.start_date | safe}}</td>
                 <td>{{project.end_date | safe }}</td>
                 <td>
-                    {% for worker in project.projects_working_on.all %}
+                    {% for user in project.projects_working_on.all %}
                         <a class="workers" href="/dashboard/profile/{{ worker.id }}">{{ worker.firstName }}</a>
                     {% endfor %}
                 </td>
                 <td>
-                        <!-- This quick_links logic is for CURRENT projects -->
-                        <div class="quick_links">
-                            {% if user in project.projects_working_on.all %}
-                                <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
-                            {% else %}
-                                <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
-                            {% endif %}
-                            {% if project in user.made_by.all %}
-                                <a href="/dashboard/complete_project/{{project.id}}">Complete project*</a>
-                                <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
-                                <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
-                            {% endif %}
-                        </div>
+                    <div class="quick_links">
+                        {% if user in project.projects_working_on.all %}
+                            <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
+                        {% else %}
+                            <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
+                        {% endif %}
+                        {% if project in user.made_by.all %}
+                            <a href="/dashboard/complete_project/{{project.id}}">Complete project</a>
+                            <a href="/dashboard/delete_project/{{ project.id }}">Delete project</a>
+                            <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project</a>
+                        {% endif %}
+                    </div>
                 </td>
             </tr>
             {% endif %}
@@ -127,20 +137,12 @@
                         {% endfor %}
                     </td>
                     <td>
-                        <!-- This quick_links logic is for ARCHIVED projects -->
                         <div class="quick_links">
+                            <a href="/dashboard/complete_project/{{project.id}}">Complete project</a>
                             {% if user in project.projects_working_on.all %}
                                 <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
-                            {% elif user in project.done == False %}
+                            {% else %}
                                 <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
-                            {% endif %}
-                            {% if project in user.made_by.all %}
-                            <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
-                            <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
-                            {% endif %}
-                            {% if user in project.done == False %}
-                            {% elif project in user.made_by.all %}
-                            <a href="/dashboard/resume_project/{{ project.id }}">Resume project*</a>
                             {% endif %}
                         </div>
                     </td>

@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from django.db.models import F
 import pytz
 import uuid
+import json
 
 # Create your views here.
 
@@ -50,11 +51,11 @@ def delete_project(request, proj_id):
     this_project = Project.objects.get(id = proj_id)
     this_project.delete()
     return redirect('/dashboard')
+
 def detail(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
     time = Timekeeper.objects.filter(proj_time=this_project) # only project times (hopefully)
     notes = this_project.notes.all()
-    # last_time = Timekeeper.objects.last()
     this_user = User.objects.get(id= request.session['userid'])
     user = User.objects.get(id=request.session['userid'])
     last_time = user.time_of_user.last()
@@ -77,6 +78,7 @@ def detail(request, proj_id):
         'last_time' : last_time,
         'user_project_time': user_project_time,
         'total_project_time': total_project_time,
+        'timezones': pytz.common_timezones,
     }
     return render(request, 'view.html', context)
 
@@ -85,7 +87,6 @@ def clockin(request, proj_id):
     user = User.objects.get(id=request.session['userid'])
     now = datetime.now(timezone.utc)
     time = Timekeeper.objects.create(clock_in=now, clock_out=now, entire_time = int(0), users_time=user, proj_time = this_project, is_working=True)
-    # time_id = request.session['timeid']
     Timekeeper.objects.update(total_time=F('clock_out') - F('clock_in'))
     return redirect('/dashboard/view/'+str(proj_id))
 
@@ -94,7 +95,7 @@ def clockout(request, proj_id):
     now = datetime.now(timezone.utc)
     this_proj = Project.objects.get(id = proj_id)
     this_time = user.time_of_user.last()
-    time = this_time.users_time # ummm... i dont even know... may have to modify
+    time = this_time.users_time
     this_time.clock_out = now
     this_time.is_working = False
     this_time.save()
@@ -113,6 +114,19 @@ def delete_time(request, time_id):
     time.delete()
     return redirect('/dashboard')
 
+def edit_project_page(request, proj_id):
+    if not 'userid' in request.session:
+        return redirect('/')
+    else:
+        currentUser = User.objects.get(id=request.session['userid'])
+        context = {
+            'user': currentUser,
+            'all_projects' : Project.objects.all(),
+            'project': Project.objects.get(id=proj_id),
+            'timezones': pytz.common_timezones,
+        }
+    return render(request, 'edit.html', context)
+
 def edit_project(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
     user = User.objects.get(id = request.session['userid'])
@@ -130,33 +144,6 @@ def edit_project(request, proj_id):
 
 def new_note(request, proj_id):
     this_project = Project.objects.get(id=proj_id)
-
-def view_profile(request, worker_id):
-    if not 'userid' in request.session:
-        return redirect('/')
-    else:
-        user = User.objects.get(id=request.session['userid'])
-        worker = User.objects.get(id=worker_id)
-        workertime = worker.time_of_user.all()     # all times of the user
-        worker_total_time = 0
-        for i in workertime:
-            worker_total_time += i.entire_time
-        context = {
-            'user' : user,
-            'worker': worker,
-            'workertime': workertime,
-            'worker_total_time': worker_total_time,
-        }
-        return render(request, 'profile.html', context)
-
-def create_post(request):
-    subject = request.POST['subject']
-    file_name = request.FILES["profile_picture"].name
-    request.FILES['profile_picture'].name = "{}.{}".format(uuid.uuid4().hex, file_name.split(".")[-1])
-
-    Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
-    return redirect('/dashboard/profile')
-
     this_user = User.objects.get(id=request.session['userid'])
     errors = Message.objects.message_validate(request.POST)
     if len(errors) > 0:
@@ -169,6 +156,34 @@ def create_post(request):
         project = this_project,
     )
     return redirect('/dashboard/view/' + str(proj_id))
+
+def view_profile(request, worker_id):
+    if not 'userid' in request.session:
+        return redirect('/')
+    else:
+        user = User.objects.get(id=request.session['userid'])
+        worker = User.objects.get(id=worker_id)
+        worker_projects = worker.projects_assigned_to
+        workertime = worker.time_of_user.all()     # all times of the user
+        worker_total_time = 0
+        for i in workertime:
+            worker_total_time += i.entire_time
+        context = {
+            'user' : user,
+            'worker': worker,
+            'worker_projects': worker_projects,
+            'workertime': workertime,
+            'worker_total_time': worker_total_time,
+            'timezones': pytz.common_timezones,
+        }
+        return render(request, 'profile.html', context)
+
+def create_post(request):
+    subject = request.POST['subject']
+    file_name = request.FILES["profile_picture"].name
+    request.FILES['profile_picture'].name = "{}.{}".format(uuid.uuid4().hex, file_name.split(".")[-1])
+    Picture.objects.create(subject = subject, file_name = file_name, image = request.FILES['profile_picture'], users_pic = User.objects.get(id = request.session['userid']))
+    return redirect('/dashboard/edit_profile')
 
 def new_comment(request, proj_id):
     this_message = Message.objects.get(id=request.POST['message_id'])
@@ -205,15 +220,33 @@ def leave_project(request, proj_id):
     this_project.projects_working_on.remove(this_user)
     return redirect('/dashboard')
 
-
 def set_timezone(request):
     if request.method == 'POST':
         request.session['django_timezone'] = request.POST['timezone']
         return redirect('/dashboard')
     else:
         return render(request, 'homepage.html', {'timezones': pytz.common_timezones})
+
 def archive(request, proj_id):
     project = Project.objects.get(id=proj_id)
     project.done = True
     project.save()
     return redirect('/dashboard')
+
+def re_chive(request, proj_id):
+    project = Project.objects.get(id=proj_id)
+    project.done = False
+    project.save()
+    return redirect('/dashboard')
+
+def edit_profile(request):
+    if not 'userid' in request.session:
+        return redirect('/')
+    else:
+        currentUser = User.objects.get(id=request.session['userid'])
+        context = {
+            'user': currentUser,
+            'all_projects' : Project.objects.all(),
+            'timezones': pytz.common_timezones,
+        }
+    return render(request, 'edit_profile.html', context)
