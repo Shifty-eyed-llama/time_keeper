@@ -76,7 +76,7 @@
                     </tr>
                 </thead>
                 <tbody>
-            {% for project in worker_projects.all %}
+            {% for project in user.projects_assigned_to.all %}
             {% if project.done == False%}
             <tr>
                 <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
@@ -96,7 +96,6 @@
                         {% endif %}
                         {% if project in user.made_by.all %}
                             <a href="/dashboard/complete_project/{{project.id}}">Complete project</a>
-                            <a href="/dashboard/delete_project/{{ project.id }}">Delete project</a>
                             <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project</a>
                         {% endif %}
                     </div>
@@ -114,15 +113,15 @@
             <table id='projects'>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Project Title</th>
-                        <th onclick="sortTable(1)">Start Date</th>
-                        <th onclick="sortTable(2)">Due Date</th>
-                        <th onclick="sortTable(3)">Project Team</th>
-                        <th onclick="sortTable(4)">Quick Links</th>
+                        <th onclick="sortTable(5)">Project Title</th>
+                        <th onclick="sortTable(6)">Start Date</th>
+                        <th onclick="sortTable(7)">Due Date</th>
+                        <th onclick="sortTable(8)">Project Team</th>
+                        <th onclick="sortTable(9)">Quick Links</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for project in worker_projects.all %}
+                {% for project in user.projects_assigned_to.all %}
                 {% if project.done == True %}
                 <tr>
                     <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>

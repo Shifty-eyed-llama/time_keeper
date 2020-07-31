@@ -72,9 +72,8 @@
                                 <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
                             {% endif %}
                             {% if project in user.made_by.all %}
-                                <a href="/dashboard/complete_project/{{project.id}}">Complete project*</a>
-                                <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
-                                <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
+                            <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
+                            <a href="/dashboard/complete_project/{{project.id}}">Complete project*</a>
                             {% endif %}
                         </div>
                     </td>
@@ -91,10 +90,10 @@
             <table id='projects'>
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Project Title</th>
-                        <th onclick="sortTable(1)">Start Date</th>
-                        <th onclick="sortTable(2)">Due Date</th>
-                        <th onclick="sortTable(3)">Project Team</th>
+                        <th onclick="sortTable(4)">Project Title</th>
+                        <th onclick="sortTable(5)">Start Date</th>
+                        <th onclick="sortTable(6)">Due Date</th>
+                        <th onclick="sortTable(7)">Project Team</th>
                         <th>Quick Links</th>
                     </tr>
                 </thead>
@@ -113,14 +112,8 @@
                     <td>
                         <!-- This quick_links logic is for ARCHIVED projects -->
                         <div class="quick_links">
-                            {% if user in project.projects_working_on.all %}
-                                <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
-                            {% elif user in project.done == False %}
-                                <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
-                            {% endif %}
                             {% if project in user.made_by.all %}
                             <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
-                            <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
                             {% endif %}
                             {% if user in project.done == False %}
                             {% elif project in user.made_by.all %}

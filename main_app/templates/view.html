@@ -32,7 +32,7 @@
         {% if user.profile.all > 0 %}
         <div id="pic">
             {% for pic in user.profile.all %}
-                <img src="{{MEDIA_URL}}{{pic.image}}" alt="" width="150px">
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt=""  width="150px">
             {% endfor %}
         </div>
         {% endif %}
@@ -46,6 +46,7 @@
                     <p id="total"> You last <span style="color: red; font-weight: bold;">stopped</span>  working at: <span style="font-weight: bold;">{{ last_time.clock_out|time }}</span></p>
                 {% endif %}
         </div>
+ 
         <div class="clock_buttons">
         {% if last_time.is_working == True %}
             <form action="/dashboard/clockout/{{ project.id }}">
@@ -56,11 +57,13 @@
                 <button type="submit" style="background-color: green">Clock In</button>
             </form>
         {% endif %}
+    
             <p><a href="/dashboard/leave_project/{{project.id}}">Leave this project</a></p>
         {% else %}
             <p>User NOT assigned to project</p>
             <p><a href="/dashboard/join_project_stay/view/{{ project.id }}">Click here to join this project</a></p>
         {% endif %}
+
         </div>
     </div>
     <div class="wrapper">
