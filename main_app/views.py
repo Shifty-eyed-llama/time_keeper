@@ -59,6 +59,8 @@ def detail(request, proj_id):
     this_user = User.objects.get(id= request.session['userid'])
     user = User.objects.get(id=request.session['userid'])
     last_time = user.time_of_user.last()
+    last_user_clockin = time.filter(users_time=user)
+    ttime = last_user_clockin.last()
     usertime = user.time_of_user.all()     # all times of the user
     proj = Project.objects.get(id=proj_id)
     projtime = proj.time_of_project.all()      # all times in the project
@@ -79,6 +81,7 @@ def detail(request, proj_id):
         'user_project_time': user_project_time,
         'total_project_time': total_project_time,
         'timezones': pytz.common_timezones,
+        'ttime': ttime,
     }
     return render(request, 'view.html', context)
 
@@ -248,9 +251,16 @@ def edit_profile(request):
         return redirect('/')
     else:
         currentUser = User.objects.get(id=request.session['userid'])
+        user = User.objects.get(id=worker_id)
+        user_projects = user.projects_assigned_to
+        usertime = user.time_of_user.all()     # all times of the user
+        user_total_time = 0
+        for i in usertime:
+            user_total_time += i.entire_time
         context = {
             'user': currentUser,
             'all_projects' : Project.objects.all(),
             'timezones': pytz.common_timezones,
+            'user_total_time': user_total_time,
         }
     return render(request, 'edit_profile.html', context)
