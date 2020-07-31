@@ -4,43 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit {{ project.title }}</title>
+    {% load static %}
+    {% load app_filters %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script src="{% static 'js/homepage.js' %}"></script>
 </head>
 <body>
-    <form action="/dashboard/edit/{{ project.id }}" method="post">
-        {% csrf_token %}
-        <h1>Make changes to your project</h1>
-        <div class="inputs">
-            <p>
-                <label for="title">Project title</label>
-            </p>
-            <input type="text" name="title" id="title" value="{{project.title}}">
+    <div class="header">
+        <div class="links">
+            <a href="/dashboard">Go back</a>
+            <a href="/end_session">Logout</a>
         </div>
-        <div class="inputs">
-            <p>
-                <label for="start">Project start date</label>
-            </p>
-            <input type="date" name="start" id="start" value="{{project.start_date|date:'Y-m-d'}}">
+        <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
+        <div id="pic">
+            {% for pic in user.profile.all %}
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
+            {% endfor %}
         </div>
-        <div class="inputs">
-            <p>
-                <label for="end">Project end date</label>
-            </p>
-            <input type="date" name="end" id="end" value="{{project.end_date|date:'Y-m-d'}}">
+        <h3>What would you like to do?</h3>
+        {% load tz %}
+        {% get_current_timezone as TIME_ZONE %}
+        <form action="/dashboard/set_timezone" method="POST">
+            {% csrf_token %}
+            <p>Change Time Zone</p>
+            <select name="timezone">
+            {% for tz in timezones %}
+                <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected {% endif %}>
+                {{ tz }}
+                </option>
+            {% endfor %}
+            </select>
+            <input type="submit" value="Set">
+        </form>
+        <a class="link_buttons" href="/dashboard/new">Start a new project</a>
+        <a class="link_buttons" href="/dashboard/edit_profile/{{user.id}}">Update your profile</a>
+    </div>
+    <div class="wrapper">
+        <div class="projects">
+            {% if user.id == worker.id %}
+            <div class="upload_photo">
+                <h1>Upload a picture</h1>
+                <form action="/dashboard/create_file" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="profile_picture" id="">
+                    <p>
+                        <input type="text" name="subject" id="">
+                    </p>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            {% endif %}
+            <form action="/dashboard/edit/{{ project.id }}" method="post">
+                {% csrf_token %}
+                <div class="edit_project">
+                    <h1>Make changes to your project</h1>
+                    <div class="inputs">
+                        <label for="title">Project title</label>
+                        <input type="text" name="title" id="title" value="{{project.title}}">
+                    </div>
+                    <div class="inputs">
+                        <label for="start">Project start date</label>
+                        <input type="date" name="start" id="start" value="{{project.start_date|date:'Y-m-d'}}">
+                    </div>
+                    <div class="inputs">
+                        <label for="end">Project end date</label>
+                        <input type="date" name="end" id="end" value="{{project.end_date|date:'Y-m-d'}}">
+                    </div>
+                </div>
+                {% if this_project.notes %}
+                {% for note in this_project.notes.all %}
+                <p>{{ note.note }} -- {{note.created_by.firstName}} </p>
+                {% endfor %}
+                {% endif %}
+                <div class="inputs">
+                    <p><label for="notes">Project notes</label></p>
+                    <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.notes}}"></textarea>
+                </div>
+                <button type="submit">Edit Project</button>
+            </form>
+            </div>
         </div>
-
-        {% if this_project.notes %}
-        {% for note in this_project.notes.all %}
-        <p>{{ note.note }} -- {{note.created_by.firstName}} </p>
-        {% endfor %}
-        {% endif %}
-        <div class="inputs">
-            <p>
-                <label for="notes">Project notes</label>
-            </p>
-            <textarea name="message" id="notes" cols="60" rows="10" placeholder="{{project.notes}}"></textarea>
-        </div>
-        <button type="submit">Edit Project</button>
-    </form>
     </div>
     
 </body>

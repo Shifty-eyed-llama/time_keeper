@@ -1,7 +1,21 @@
+$(document).ready(function(){
+  $(".dropbtn").click(function(){
+    $(".dropdown").slideToggle();
+  });
+});
+
 
 function confirmDelete() {
     return confirm("Are you REALLY sure you want to delete this project?")
 }   
+
+function changeFunc() {
+  var selectBox = document.getElementById("selectBox");
+  var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+  location.href="/dashboard/profile/" + selectedValue;
+ }
+
+
 
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

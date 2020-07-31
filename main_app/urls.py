@@ -8,7 +8,9 @@ urlpatterns = [
     path('create', views.create),
     path('delete_project/<int:proj_id>', views.delete_project),
     path('view/<int:proj_id>', views.detail),
+    path('edit_project_page/<int:proj_id>', views.edit_project_page),
     path('edit_project/<int:proj_id>', views.edit_project),
+    path('edit_profile', views.edit_profile),
     path('remove_user/<int:proj_id>', views.remove_user),
     path('clockin/<int:proj_id>', views.clockin),
     path('clockout/<int:proj_id>', views.clockout),
@@ -22,4 +24,5 @@ urlpatterns = [
     path('leave_project/<int:proj_id>', views.leave_project),
     path('set_timezone', views.set_timezone),
     path('complete_project/<int:proj_id>', views.archive),
+    path('resume_project/<int:proj_id>', views.re_chive),
 ]

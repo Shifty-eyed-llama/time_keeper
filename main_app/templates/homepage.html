@@ -4,110 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Management</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
     <script src="{% static 'js/homepage.js' %}"></script>
 </head>
 <body>
-        <div class="header">
-            <div class="links">
-                <a href="/end_session">Logout</a>
-            </div>
-            <div id="pic">
-                {% for pic in user.profile.all %}
-                <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
-                {% endfor %}
-            </div>
-            <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
-            <h3>What would you like to do?</h3>
-            <li><a href="/dashboard/new">Start a new project</a></li>
-            <li><a href="/dashboard/profile/{{user.id}}">Update your profile</a></li>
+    <div class="header">
+        <div class="links">
+            <a class="a_hover" href="/end_session">Logout</a>
         </div>
-        <div class="wrapper">
-            {% load tz %}
-            {% get_current_timezone as TIME_ZONE %}
-            <form action="/dashboard/set_timezone" method="POST">
-                {% csrf_token %}
-                <label for="timezone">
-                    Time zone:
-                </label>
-                <select name="timezone">
-                    {% for tz in timezones %}
-                    <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>
-                        {{ tz }}
-                    </option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Set">
-            </form>
-            <div class="projects">
-                <h1>All projects</h1>
-                <table id='projects'>
-                    <thead>
-                    <tr>
-                        <th onclick="sortTable(0)">Project Title</th>
-                        <th onclick="sortTable(1)">Start Date</th>
-                        <th onclick="sortTable(2)">Due Date</th>
-                        <th onclick="sortTable(3)">Created By</th>
-                        <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+        <h1>Welcome, <a href="/dashboard/profile/{{user.id}}">{{user.firstName}}</a></h1>
+        <div id="pic">
+            {% for pic in user.profile.all %}
+                <img src="{{MEDIA_URL}}{{pic.image}}" alt="avatar" style="border-radius: 50%" height="100px" width="100px">
+            {% endfor %}
+        </div>
+        <h3>What would you like to do?</h3>
+        {% load tz %}
+        {% get_current_timezone as TIME_ZONE %}
+        <form action="/dashboard/set_timezone" method="POST">
+            {% csrf_token %}
+            <p>Change Time Zone</p>
+            <select name="timezone">
+            {% for tz in timezones %}
+                <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected {% endif %}>
+                {{ tz }}
+                </option>
+            {% endfor %}
+            </select>
+            <input type="submit" value="Set">
+        </form>
+        <a class="link_buttons" href="/dashboard/new">Start a new project</a>
+        <a class="link_buttons" href="/dashboard/edit_profile">Update your profile</a>
+    </div>
+    <div class="wrapper">
+        <div class="projects">
+            <h1>Current projects</h1>
+            <table id='projects'>
+                <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Project Title</th>
+                    <th onclick="sortTable(1)">Start Date</th>
+                    <th onclick="sortTable(2)">Due Date</th>
+                    <th onclick="sortTable(3)">Project Team</th>
+                    <th>Quick Links</th>
+                </tr>
+                </thead>
+            <tbody>
                 {% for project in all_projects %}
                 {% if project.done == False%}
                 <tr>
                     <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
                     <td>{{project.start_date | safe}}</td>
                     <td>{{project.end_date | safe }}</td>
-                    <td>{{project.created_by.firstName}}</td>
-                    {% for worker in project.projects_working_on.all %}
-                    <td style="display: block;">
-                        <a href="/dashboard/profile/{{ worker.id }}">
-                            {{ worker.firstName }}</td>
-                        </a>
-                    {% endfor %}
-                    <td><a href="/dashboard/join_project/{{ project.id }}">Join project</a>
+                    <td>
+                        {% for worker in project.projects_working_on.all %}
+                            <a class="workers" href="/dashboard/profile/{{ worker.id }}">{{ worker.firstName }}</a>
+                        {% endfor %}
                     </td>
-                    <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
+                    <td>
+                        <!-- This quick_links logic is for CURRENT projects -->
+                        <div class="quick_links">
+                            {% if user in project.projects_working_on.all %}
+                                <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
+                            {% else %}
+                                <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
+                            {% endif %}
+                            {% if project in user.made_by.all %}
+                                <a href="/dashboard/complete_project/{{project.id}}">Complete project*</a>
+                                <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
+                                <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
+                            {% endif %}
+                        </div>
                     </td>
-                    <td><a href="/dashboard/complete_project/{{project.id}}">Complete</a></td>
                 </tr>
                 {% endif %}
                 {% endfor %}
-                    </tbody>
-            </table>
-            </div>
-        </div>
-        <div class="wrapper">
-
-    <div class="projects">
-        <h1>Past projects</h1>
-        <table id='projects'>
-            <thead>
-            <tr>
-                <th onclick="sortTable(0)">Project Title</th>
-                <th onclick="sortTable(1)">Start Date</th>
-                <th onclick="sortTable(2)">Due Date</th>
-                <th onclick="sortTable(3)">Created By</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
-        {% for project in all_projects %}
-        {% if project.done == True %}
-        <tr>
-            <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
-            <td>{{project.start_date | safe}}</td>
-            <td>{{project.end_date | safe }}</td>
-            <td>{{project.created_by.firstName}}</td>
-            <td><a href="/dashboard/delete_project/{{ project.id }}" onclick="return confirmDelete()">Delete</a>
-            </td>
-        </tr>
-        {% endif %}
-        {% endfor %}
             </tbody>
-    </table>
+        </table>
+        </div>
     </div>
-</div>
+    <div class="wrapper">
+        <div class="projects">
+            <h1>Completed projects</h1>
+            <table id='projects'>
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Project Title</th>
+                        <th onclick="sortTable(1)">Start Date</th>
+                        <th onclick="sortTable(2)">Due Date</th>
+                        <th onclick="sortTable(3)">Project Team</th>
+                        <th>Quick Links</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for project in all_projects %}
+                {% if project.done == True %}
+                <tr>
+                    <td><a href="/dashboard/view/{{ project.id }}">{{project.title}}</a></td>
+                    <td>{{project.start_date | safe}}</td>
+                    <td>{{project.end_date | safe }}</td>
+                    <td>
+                    {% for worker in project.projects_working_on.all %}
+                        <a class="workers" href="/dashboard/profile/{{ worker.id }}">{{ worker.firstName }}</a>
+                    {% endfor %}
+                    </td>
+                    <td>
+                        <!-- This quick_links logic is for ARCHIVED projects -->
+                        <div class="quick_links">
+                            {% if user in project.projects_working_on.all %}
+                                <a href="/dashboard/leave_project/{{ project.id }}">Leave project</a>
+                            {% elif user in project.done == False %}
+                                <a href="/dashboard/join_project/{{ project.id }}">Join project</a>
+                            {% endif %}
+                            {% if project in user.made_by.all %}
+                            <a href="/dashboard/delete_project/{{ project.id }}">Delete project*</a>
+                            <a href="/dashboard/edit_project_page/{{ project.id }}">Edit project*</a>
+                            {% endif %}
+                            {% if user in project.done == False %}
+                            {% elif project in user.made_by.all %}
+                            <a href="/dashboard/resume_project/{{ project.id }}">Resume project*</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
